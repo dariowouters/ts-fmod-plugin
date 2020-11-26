@@ -46,6 +46,10 @@ Here's the correct folder structure:
 For any sound mods you want to add you have to copy the (usually located in `/sound/truck/`) `<sound_mod_name>.bank` and the `<sound_mod_name>.bank.guids` files from the mod to the `ts-fmod-plugin` folder, and then open the `selected.bank.txt` file in a text editor and change the text in the file to the filename of the mod (without the file extension).<br>
 So for example if the sound mod files are named `sound_mod.bank` and `sound_mod.bank.guids` you have to change the text in the `selected.bank.txt` file to `sound_mod`.
 
+Now you can load the game and the sound should work when you start your truck.
+
+### Some extra info
+
 If you have the developer console enabled in-game you can switch sound mods without restarting by changing the filename in `selected.bank.txt` and then in the game console enter `sdk reload`. This will reload all telemetry plugins and cause this plugin to load the newly selected sound mod.
 
 When the game updates you might need to update the `master.bank` file, it is located in the base.scs file for the specific game, in that file it is located in `/sound/master/`
