@@ -69,14 +69,26 @@ public:
 
 class unk_window // still need to figure out what this actually is
 {
-    char pad_0000[0xE0]; //0x0000
-    vec2s_t window_state; // 0x00E0
+    char pad_0000[176]; //0x0000
+    bool interior_camera; //0x00B0 1 when camera is set to interior even when head out the window??
+    bool is_camera_inside; //0x00B1 1 if camera is inside, 0 when head through window??
+    char pad_00B2[2]; //0x00B2
+    float camera_rotation_in_cabin; //0x00B4 0 = head straight, left is -, right is +, maybe different for UK??
+    bool should_have_echo; //0x00B8
+    char pad_00BC[28]; //0x00BC
+    class N00000C84 *N0000432E; //0x00D8
+    vec2s_t window_state; //0x00E0 0 = closed, 1 = open
+
 public:
+    bool get_has_echo() const
+    {
+        return should_have_echo;
+    }
     vec2s_t get_window_state() const
     {
         return window_state;
     }
-}; //Size: 0x1A30
+};
 
 class economy_base_t
 {

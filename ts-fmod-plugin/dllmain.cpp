@@ -101,6 +101,8 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                 engine_fmod_event->set_volume(0.3f);
                 exhaust_fmod_event->set_volume(0.3f);
             }
+
+            fmod_system->setParameterByName("surr_type", unk_window_parent->get_has_echo());
         }
     }
 
@@ -189,6 +191,8 @@ bool init_fmod_events(std::string main_bank_dir)
         }
     }
     guids_file.close();
+
+    return true;
 }
 
 bool init_fmod()

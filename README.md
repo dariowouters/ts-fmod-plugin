@@ -14,7 +14,6 @@ Currently this uses a mix of the telemetry channels provided by the SCS sdk and 
 I'm not that great at c(++) and reverse engineering so it might just stay this way, and also with more reverse engineering making updating slower and more complicated.
 
 # Some limitations/issues
-- No echo when driving in tunnels (will require reverse engineering to figure out)
 - Will keep playing sound even when alt-tabbed
 - Sound level/direction does not change with the camera, the sound is always as if you are in the truck looking forward.
 - You will need to mute or lower the in-game audio channels for your truck (or you will hear double audio), but this will also mute all truck sounds from other players
