@@ -147,7 +147,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
     else if (!telemetry_data.lblinker && !telemetry_data.rblinker && was_indicator_on)
     {
         auto stick_blinker_off_event = event_manager->get_event("interior/stick_blinker_off");
-        if (stick_blinker_off_event != nullptr) stick_park_brake_off_event->start();
+        if (stick_blinker_off_event != nullptr) stick_blinker_off_event->start();
         was_indicator_on = false;
     }
 
