@@ -16,7 +16,7 @@ I'm not that great at c(++) and reverse engineering so it might just stay this w
 # Some limitations/issues
 - Will keep playing sound even when alt-tabbed
 - Sound level/direction does not change with the camera, the sound is always as if you are in the truck looking forward.
-- You will need to mute or lower the in-game audio channels for your truck (or you will hear double audio), but this will also mute all truck sounds from other players
+- You will need to mute or lower some of the in-game audio channels for your truck (or you will hear double audio), but this will also mute all truck sounds from other players
 - Can (and most probably will) break and (possibly) crash you game with every (major) game update because it needs to read some values directly from memory, and this structure can change with updates
 - No volume control (not sure how to add this except for adding imgui or something like it)
 - Probably some more that I forgot
@@ -49,6 +49,8 @@ Now you can load the game and the sound should work when you start your truck.
 
 ### Some extra info
 
+You will generally need to mute/lower the truck engine, exhaust and turbo sound channels in the in-game settings to prevent double sounds. If the sound mod you're using includes interior sounds you will also have tho mute/lower them in-game.
+
 If you have the developer console enabled in-game you can switch sound mods without restarting by changing the filename in `selected.bank.txt` and then in the game console enter `sdk reload`. This will reload all telemetry plugins and cause this plugin to load the newly selected sound mod.
 
 When the game updates you might need to update the `master.bank` file, it is located in the base.scs file for the specific game, in that file it is located in `/sound/master/`
@@ -57,6 +59,7 @@ When the game updates you might need to update the `master.bank` file, it is loc
 Events:
 - engine/engine
 - engine/exhaust
+- engine/turbo
 - interior/air_warning
 - interior/blinker_on (and off)
 - interior/stick_blinker (and off)
@@ -67,5 +70,5 @@ Parameters:
 - brake
 - load
 - rpm
-- turbo
 - wnd_left (and right)
+- surr_type

@@ -41,6 +41,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
 {
     auto engine_fmod_event = event_manager->get_event("engine/engine");
     auto exhaust_fmod_event = event_manager->get_event("engine/exhaust");
+    auto turbo_event = event_manager->get_event("engine/turbo");
 
     engine_fmod_event->set_parameter_by_name("rpm", telemetry_data.rpm);
     exhaust_fmod_event->set_parameter_by_name("rpm", telemetry_data.rpm);
@@ -64,7 +65,10 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                     if (truck_telem_data != nullptr)
                     {
                         const auto turbo_pressure = truck_telem_data->get_turbo_pressure();
-                        if (turbo_pressure >= 0 && turbo_pressure <= 1) engine_fmod_event->set_parameter_by_name("turbo", turbo_pressure);
+                        if (turbo_pressure >= 0 && turbo_pressure <= 1 && turbo_event != nullptr)
+                        {
+                            turbo_event->set_parameter_by_name("turbo", turbo_pressure);
+                        }
 
                         const auto engine_state = truck_telem_data->get_engine_state();
                         if (engine_state != stored_engine_state) // engine state changed
@@ -74,11 +78,17 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                                 exhaust_fmod_event->set_parameter_by_name("play", 1);
                                 engine_fmod_event->start();
                                 exhaust_fmod_event->start();
+                                if (turbo_event != nullptr)
+                                {
+                                    turbo_event->set_parameter_by_name("play", 1);
+                                    turbo_event->start();
+                                }
                             }
                             else if (engine_state == 0 || engine_state == 3) // engine is no longer running
                             {
                                 engine_fmod_event->set_parameter_by_name("play", 0);
                                 exhaust_fmod_event->set_parameter_by_name("play", 0);
+                                if (turbo_event != nullptr) turbo_event->set_parameter_by_name("play", 0);
                             }
                             stored_engine_state = engine_state;
                         }
@@ -96,10 +106,12 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             if (window_pos.x == 0 && window_pos.y == 0) { // not sure what to to with this (sound levels when windows close(d)) yet / maybe fade audio the more it closes/opens
                 engine_fmod_event->set_volume(0.15f);
                 exhaust_fmod_event->set_volume(0.15f);
+                if (turbo_event != nullptr) turbo_event->set_volume(0.15f);
             }
             else {
                 engine_fmod_event->set_volume(0.3f);
                 exhaust_fmod_event->set_volume(0.3f);
+                if (turbo_event != nullptr) turbo_event->set_volume(0.3f);
             }
 
             fmod_system->setParameterByName("surr_type", unk_window_parent->get_has_echo());
@@ -249,8 +261,10 @@ bool init_fmod()
     {
         return false;
     }
-    event_manager->get_event("engine/engine")->set_volume(0.3f);
+    event_manager->get_event("engine/engine")->set_volume(0.3f); // TODO: Use the busses instead of events individually
     event_manager->get_event("engine/exhaust")->set_volume(0.3f);
+    auto turbo_event = event_manager->get_event("engine/turbo");
+    if (turbo_event != nullptr) turbo_event->set_volume(0.3f);
 
     return true;
 }
