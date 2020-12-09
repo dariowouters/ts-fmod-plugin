@@ -17,10 +17,16 @@ uintptr_t game_base = NULL;
 DWORD image_size = 0;
 
 uint32_t stored_engine_state = 0;
-bool was_indicator_on = false;
+byte indicator_stick_state = false;
 bool was_indicator_light_on = false;
 bool was_park_brake_on = false;
 uint32_t prev_retarder_level = 0;
+bool high_beams_enabled = false;
+bool wipers_enabled = false;
+float hazard_warning_state = 0.0f;
+float light_horn_state = 0.0f;
+float light_stick_state = 0.0f;
+float wipers_stick_state = 0.0f;
 
 scs_telemetry_register_for_channel_t register_for_channel = nullptr;
 scs_telemetry_unregister_from_channel_t unregister_from_channel = nullptr;
@@ -80,6 +86,34 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                             }
                             stored_engine_state = engine_state;
                         }
+
+                        const auto hazard_warning = truck_telem_data->get_hazard_warning_state();
+                        if (!common::cmpf(hazard_warning, hazard_warning_state))
+                        {
+                            fmod_manager_instance->set_event_state("interior/stick_hazard_warning", true);
+                            hazard_warning_state = hazard_warning;
+                        }
+
+                        const auto light_horn = truck_telem_data->get_light_horn_state();
+                        if (!common::cmpf(light_horn, light_horn_state))
+                        {
+                            fmod_manager_instance->set_event_state("interior/stick_light_horn", true);
+                            light_horn_state = light_horn;
+                        }
+
+                        const auto stick_lights = truck_telem_data->get_light_switch_state();
+                        if (!common::cmpf(stick_lights, light_stick_state))
+                        {
+                            fmod_manager_instance->set_event_state("interior/stick_lights", true);
+                            light_stick_state = stick_lights;
+                        }
+
+                        const auto wipers_stick = truck_telem_data->get_wipers_state();
+                        if (!common::cmpf(wipers_stick, wipers_stick_state))
+                        {
+                            fmod_manager_instance->set_event_state("interior/stick_wipers", true);
+                            wipers_stick_state = wipers_stick;
+                        }
                     }
                 }
             }
@@ -91,7 +125,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             const auto window_pos = unk_window_parent->get_window_state();
             if (window_pos.x >= 0 && window_pos.x <= 1) fmod_manager_instance->set_global_parameter("wnd_left", window_pos.x);
             if (window_pos.y >= 0 && window_pos.y <= 1) fmod_manager_instance->set_global_parameter("wnd_right", window_pos.y);
-            if (window_pos.x == 0 && window_pos.y == 0) // not sure what to to with this (sound levels when windows close(d)) yet / maybe fade audio the more it closes/opens
+            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0)) // not sure what to to with this (sound levels when windows close(d)) yet / maybe fade audio the more it closes/opens
             {
                 fmod_manager_instance->set_bus_volume("outside", consts::window_closed_volume);
                 fmod_manager_instance->set_bus_volume("exterior", consts::window_closed_volume); // backward compatibility
@@ -130,21 +164,28 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
         else fmod_manager_instance->set_event_state("interior/stick_park_brake", true);
     }
 
-    if ((telemetry_data.lblinker || telemetry_data.rblinker) && !was_indicator_on)
+    const byte current_blinker_stick = telemetry_data.lblinker ? 1 : telemetry_data.rblinker ? 2 : 0; // 1 if lblinker, 2 if rblinker, 0 if off
+    if (current_blinker_stick != indicator_stick_state && current_blinker_stick != 0)
     {
         fmod_manager_instance->set_event_state("interior/stick_blinker", true);
-        was_indicator_on = true;
+        indicator_stick_state = current_blinker_stick;
     }
-    else if (!telemetry_data.lblinker && !telemetry_data.rblinker && was_indicator_on)
+    else if (current_blinker_stick == 0 && indicator_stick_state != 0)
     {
         fmod_manager_instance->set_event_state("interior/stick_blinker_off", true);
-        was_indicator_on = false;
+        indicator_stick_state = 0;
     }
 
     if (telemetry_data.retarder_level != prev_retarder_level)
     {
         fmod_manager_instance->set_event_state("interior/stick_retarder", true);
         prev_retarder_level = telemetry_data.retarder_level;
+    }
+
+    if (telemetry_data.high_beam != high_beams_enabled)
+    {
+        fmod_manager_instance->set_event_state("interior/stick_high_beam", true);
+        high_beams_enabled = telemetry_data.high_beam;
     }
 #pragma endregion
     fmod_manager_instance->update();
@@ -164,6 +205,8 @@ void register_telem_channels()
     register_channel(TRUCK_CHANNEL_head_offset, SCS_U32_NIL, fplacement, head_offset)
     register_channel(TRUCK_CHANNEL_parking_brake, SCS_U32_NIL, bool, park_brake_on)
     register_channel(TRUCK_CHANNEL_retarder_level, SCS_U32_NIL, u32, retarder_level)
+    register_channel(TRUCK_CHANNEL_light_high_beam, SCS_U32_NIL, bool, high_beam)
+    register_channel(TRUCK_CHANNEL_wipers, SCS_U32_NIL, bool, wipers)
 }
 
 SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_init_params_t* const params)

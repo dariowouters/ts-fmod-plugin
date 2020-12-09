@@ -1,3 +1,13 @@
+## 1.39.5
+ - Added support for more interior events:
+    - interior/stick_hazard_warning
+    - interior/stick_high_beam
+    - interior/stick_light_horn
+    - interior/stick_lights
+    - interior/stick_wipers
+ - Fixed so indicator event plays when switching between left/right indicator.
+ - Switched to using busses to control volume/pause state instead of events individually
+
 ## 1.39.4
 - Support for 1.39 turbo event, older sound mods that used the turbo parameter should still work but without turbo sounds
 

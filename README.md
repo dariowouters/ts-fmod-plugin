@@ -49,7 +49,7 @@ Now you can load the game and the sound should work when you start your truck.
 
 ### Some extra info
 
-You will generally need to mute/lower the truck engine, exhaust and turbo sound channels in the in-game settings to prevent double sounds. If the sound mod you're using includes interior sounds you will also have tho mute/lower them in-game.
+You will generally need to mute/lower the truck engine, exhaust and turbo sound channels in the in-game settings to prevent double sounds. If the sound mod you're using includes interior sounds you will also have to mute/lower them in-game.
 
 If you have the developer console enabled in-game you can switch sound mods without restarting by changing the filename in `selected.bank.txt` and then in the game console enter `sdk reload`. This will reload all telemetry plugins and cause this plugin to load the newly selected sound mod.
 
@@ -65,6 +65,11 @@ Events:
 - interior/stick_blinker (and off)
 - interior/stick_park_brake (and off)
 - interior/stick_retarder
+- interior/stick_hazard_warning
+- interior/stick_high_beam
+- interior/stick_light_horn
+- interior/stick_lights
+- interior/stick_wipers
 
 Parameters:
 - brake

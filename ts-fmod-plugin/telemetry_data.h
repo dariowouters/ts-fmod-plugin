@@ -17,5 +17,8 @@ struct telemetry_data_t
     bool light_lblinker;
     bool light_rblinker;
 
+    bool high_beam;
+    bool wipers;
+
     scs_value_fplacement_t head_offset;
 };
