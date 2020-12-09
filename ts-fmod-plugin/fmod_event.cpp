@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "fmod_event.h"
 
-const FMOD_RESULT fmod_event::load_event_description()
+FMOD_RESULT fmod_event::load_event_description()
 {
     if (event_desc_ == nullptr)
     {
@@ -10,17 +10,13 @@ const FMOD_RESULT fmod_event::load_event_description()
     return FMOD_ERR_EVENT_ALREADY_LOADED;
 }
 
-fmod_event::fmod_event(FMOD::Studio::System *fmod_system, std::string s_guid)
+fmod_event::fmod_event(FMOD::Studio::System *fmod_system, const std::string& s_guid)
 {
     fmod_system_ = fmod_system;
-    sscanf_s(s_guid.c_str(),
-        "{%8x-%4hx-%4hx-%2hhx%2hhx-%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx}",
-        &guid_.Data1, &guid_.Data2, &guid_.Data3,
-        &guid_.Data4[0], &guid_.Data4[1], &guid_.Data4[2], &guid_.Data4[3],
-        &guid_.Data4[4], &guid_.Data4[5], &guid_.Data4[6], &guid_.Data4[7]);
+    guid_ = common::get_guid(s_guid);
 }
 
-const FMOD_RESULT fmod_event::create_event_instance()
+FMOD_RESULT fmod_event::create_event_instance()
 {
     FMOD_RESULT res = FMOD_OK;
     if (event_instance_ == nullptr)
@@ -35,7 +31,7 @@ const FMOD_RESULT fmod_event::create_event_instance()
     return res;
 }
 
-const FMOD_RESULT fmod_event::get_instance(FMOD::Studio::EventInstance** inst)
+FMOD_RESULT fmod_event::get_instance(FMOD::Studio::EventInstance** inst)
 {
     FMOD_RESULT res = FMOD_OK;
     if (event_instance_ == nullptr)
@@ -47,28 +43,28 @@ const FMOD_RESULT fmod_event::get_instance(FMOD::Studio::EventInstance** inst)
     return res;
 }
 
-const FMOD_RESULT fmod_event::set_parameter_by_name(const char* name, float value)
+FMOD_RESULT fmod_event::set_parameter_by_name(const char* name, float value) const
 {
     if (event_instance_ == nullptr) return FMOD_ERR_NOTREADY;
     return event_instance_->setParameterByName(name, value);
 }
-const FMOD_RESULT fmod_event::start()
+FMOD_RESULT fmod_event::start() const
 {
     if (event_instance_ == nullptr) return FMOD_ERR_NOTREADY;
     return event_instance_->start();
 }
-const FMOD_RESULT fmod_event::stop(FMOD_STUDIO_STOP_MODE mode)
+FMOD_RESULT fmod_event::stop(FMOD_STUDIO_STOP_MODE mode) const
 {
     if (event_instance_ == nullptr) return FMOD_ERR_NOTREADY;
     return event_instance_->stop(mode);
 }
-const FMOD_RESULT fmod_event::set_volume(float value)
+FMOD_RESULT fmod_event::set_volume(float value) const
 {
     if (event_instance_ == nullptr) return FMOD_ERR_NOTREADY;
     return event_instance_->setVolume(value);
 }
 
-const FMOD_RESULT fmod_event::get_playback_state(FMOD_STUDIO_PLAYBACK_STATE* state)
+FMOD_RESULT fmod_event::get_playback_state(FMOD_STUDIO_PLAYBACK_STATE* state) const
 {
     if (event_instance_ == nullptr) return FMOD_ERR_NOTREADY;
     return event_instance_->getPlaybackState(state);

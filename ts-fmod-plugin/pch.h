@@ -8,9 +8,10 @@
 #define PCH_H
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 #include <combaseapi.h>
 
+#include <sstream>
 #include <filesystem>
 #include <fstream>
 
@@ -20,8 +21,10 @@
 #include "fmod/fmod_studio.hpp"
 #include "fmod/fmod_errors.h"
 
-#include "fmod_event.h"
-#include "fmod_event_manager.h"
+#include "consts.h"
+#include "common.h"
+
+#include "fmod_manager.h"
 
 #include "scssdk/scssdk_telemetry.h"
 #include "scssdk/eurotrucks2/scssdk_telemetry_eut2.h"

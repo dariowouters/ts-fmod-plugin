@@ -169,8 +169,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="consts.h" />
     <ClInclude Include="fmod_event.h" />
-    <ClInclude Include="fmod_event_manager.h" />
+    <ClInclude Include="fmod_manager.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="memory_structure.h" />
     <ClInclude Include="pch.h" />
@@ -180,7 +182,7 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="fmod_event.cpp" />
-    <ClCompile Include="fmod_event_manager.cpp" />
+    <ClCompile Include="fmod_manager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
