@@ -148,6 +148,16 @@ public:
     {
         return window_state;
     }
+
+    bool get_is_camera_inside() const
+    {
+        return is_camera_inside;
+    }
+
+    bool get_is_on_interior_cam() const
+    {
+        return interior_camera;
+    }
 };
 
 class economy_base_t

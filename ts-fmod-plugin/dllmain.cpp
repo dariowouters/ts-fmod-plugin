@@ -125,15 +125,28 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             const auto window_pos = unk_window_parent->get_window_state();
             if (window_pos.x >= 0 && window_pos.x <= 1) fmod_manager_instance->set_global_parameter("wnd_left", window_pos.x);
             if (window_pos.y >= 0 && window_pos.y <= 1) fmod_manager_instance->set_global_parameter("wnd_right", window_pos.y);
-            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0)) // not sure what to to with this (sound levels when windows close(d)) yet / maybe fade audio the more it closes/opens
+            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0))
             {
-                fmod_manager_instance->set_bus_volume("outside", consts::window_closed_volume);
-                fmod_manager_instance->set_bus_volume("exterior", consts::window_closed_volume); // backward compatibility
+                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->sound_levels.windows_closed);
+                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->sound_levels.windows_closed); // backward compatibility
             }
             else
             {
-                fmod_manager_instance->set_bus_volume("outside", consts::window_open_volume);
-                fmod_manager_instance->set_bus_volume("exterior", consts::window_open_volume); // backward compatibility
+                fmod_manager_instance->set_bus_volume("outside", 1);
+                fmod_manager_instance->set_bus_volume("exterior", 1); // backward compatibility
+            }
+
+            if (unk_window_parent->get_is_camera_inside())
+            {
+                fmod_manager_instance->set_bus_volume("cabin/interior", fmod_manager_instance->sound_levels.interior);
+            }
+            else if (unk_window_parent->get_is_on_interior_cam())
+            {
+                fmod_manager_instance->set_bus_volume("cabin/interior", fmod_manager_instance->sound_levels.interior / 2.0f);
+            }
+            else
+            {
+                fmod_manager_instance->set_bus_volume("cabin/interior", 0);
             }
 
             fmod_manager_instance->set_global_parameter("surr_type", unk_window_parent->get_has_echo());

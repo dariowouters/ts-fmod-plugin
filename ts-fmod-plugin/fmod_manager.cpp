@@ -78,8 +78,16 @@ bool fmod_manager::init()
         return false;
     }
 
-    set_bus_volume("outside", consts::window_closed_volume);
-    set_bus_volume("exterior", consts::window_closed_volume); // backward compatibility for 1.37 sound mods
+    load_sound_levels(plugin_files_dir);
+
+    set_bus_volume("", sound_levels.master);
+    set_bus_volume("outside/exterior/truck_engine", sound_levels.engine);
+    set_bus_volume("outside/exterior/truck_exhaust", sound_levels.exhaust);
+    set_bus_volume("outside/exterior/truck_turbo", sound_levels.turbo);
+    set_bus_volume("cabin/interior", sound_levels.interior);
+
+    set_bus_volume("outside", sound_levels.windows_closed);
+    set_bus_volume("exterior", sound_levels.windows_closed); // backward compatibility for 1.37 sound mods
 
     return true;
 }
@@ -123,6 +131,73 @@ bool fmod_manager::init_channels(const std::string& plugin_files_dir)
         }
     }
     guids_file.close();
+
+    return true;
+}
+
+float fmod_manager::get_sound_level_from_json(json j, const char* key, float defaultValue = 1.0f)
+{
+
+    std::stringstream ss;
+
+    float val = defaultValue;
+    if (j.contains(key) && j[key].is_number())
+    {
+        val = j[key].get<float>();
+        if (val < 0.0f)
+        {
+            ss << "[ts-fmod-plugin] Invalid value for sound level '" << key << "', value should be more than 0. Defaulting to " << defaultValue;
+            scs_log_(SCS_LOG_TYPE_error, ss.str().c_str());
+            val = defaultValue;
+        }
+    }
+    else
+    {
+        ss.clear();
+        ss << "[ts-fmod-plugin] Could not read sound level '" << key << "', defaulting to " << defaultValue;
+        scs_log_(SCS_LOG_TYPE_error, ss.str().c_str());
+    }
+
+    return val / 2;
+}
+
+bool fmod_manager::load_sound_levels(const std::string& plugin_files_dir)
+{
+    const auto sound_levels_file_path = plugin_files_dir + "sound_levels.txt";
+
+    if (!fs::exists(sound_levels_file_path))
+    {
+        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not find the 'sound_levels.txt' file");
+        return false;
+    }
+
+    std::ifstream sound_levels_file(sound_levels_file_path);
+    std::string line;
+
+    if (!sound_levels_file.is_open())
+    {
+        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not read the 'sound_levels.txt' file");
+        return false;
+    }
+
+    json j;
+
+    try {
+        sound_levels_file >> j;
+    }
+    catch (json::parse_error& e)
+    {
+        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not parse JSON from 'sound_levels.txt' ");
+        return false;
+    }
+
+
+    sound_levels.master = get_sound_level_from_json(j, "master");
+    sound_levels.engine = get_sound_level_from_json(j, "engine");
+    sound_levels.exhaust = get_sound_level_from_json(j, "exhaust");
+    sound_levels.turbo = get_sound_level_from_json(j, "turbo");
+    sound_levels.interior = get_sound_level_from_json(j, "interior");
+    sound_levels.windows_closed = get_sound_level_from_json(j, "exterior_when_windows_closed", 0.7f);
 
     return true;
 }

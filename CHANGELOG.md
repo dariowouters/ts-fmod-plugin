@@ -1,3 +1,7 @@
+## 1.39.6
+ - Added rudimentary audio level customization
+ - Fixed interior sounds being played when on an exterior view
+
 ## 1.39.5
  - Added support for more interior events:
     - interior/stick_hazard_warning

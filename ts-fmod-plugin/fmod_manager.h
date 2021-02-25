@@ -1,7 +1,19 @@
 #pragma once
 #include <scssdk/scssdk.h>
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 #include "fmod_event.h"
+
+struct sound_levels_t {
+    float master = 0.25;
+    float engine = 0.25;
+    float exhaust = 0.25;
+    float turbo = 0.25;
+    float interior = 0.5;
+    float windows_closed = 0.35;
+};
 
 class fmod_manager
 {
@@ -18,7 +30,12 @@ class fmod_manager
     bool load_selected_bank(const std::string& plugin_files_dir);
     bool init_channels(const std::string& plugin_files_dir);
 
+    float get_sound_level_from_json(json j, const char* key, float defaultValue);
+    bool load_sound_levels(const std::string& plugin_files_dir);
+
 public:
+    sound_levels_t sound_levels;
+
     explicit fmod_manager(scs_log_t scs_log);
     ~fmod_manager();
 
