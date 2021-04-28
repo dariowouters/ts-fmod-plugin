@@ -1,25 +1,23 @@
 # FMOD sound plugin for ATS/ETS2
 
-### Only supports 1.39
+### Only supports 1.40
 
 A telemetry plugin for ATS/ETS2 that includes an FMOD instance so that you can use FMOD sound mods.
 
 This is pretty useless in singleplayer because you could just load the mod directly in the game.<br>
-But since I'm mostly playing TruckersMP, where sound mods are not supported (which are much better than the base game sounds).
-
-So this is something I kinda quickly put together after the broken sounds in 1.37 TruckersMP, and then didn't really update it once it worked except for making it compatible with the newer versions, so it is pretty basic.
+But since I'm mostly playing TruckersMP, where sound mods are not supported (which are much better than the base game sounds), this is something I kinda quickly put together after the broken sounds in 1.37 TruckersMP, and then didn't really update it once it worked except for fixing some bugs and making it compatible with the newer versions, so it is pretty basic.
 
 Currently this uses a mix of the telemetry channels provided by the SCS sdk and directly reading values from the game's memory.
 
 I'm not that great at c(++) and reverse engineering so it might just stay this way, and also with more reverse engineering making updating slower and more complicated.
 
 # Some limitations/issues
-- Will keep playing sound even when alt-tabbed
+- Will keep playing sound even when alt-tabbed.
 - Sound level/direction does not change with the camera, the sound is always as if you are in the truck looking forward, with the exception of interior sounds not being played when on an exterior camera.
-- You will need to mute or lower some of the in-game audio channels for your truck (or you will hear double audio), but this will also mute all truck sounds from other players
-- Can (and most probably will) break and (possibly) crash you game with every (major) game update because it needs to read some values directly from memory, and this structure can change with updates
-- Only very basic volume control (might look into something better/easier in the future)
-- Probably some more that I forgot
+- You will need to mute or lower some of the in-game audio channels for your truck (or you will hear double audio).
+- Can (and most probably will) break and possibly crash your game with every major game update because it needs to read some values directly from memory, and this structure can change with updates.
+- Only very basic volume control (might look into something better/easier in the future).
+- Probably some more that I forgot.
 
 # How to use
 Download the [latest release](https://github.com/dariowouters/ts-fmod-plugin/releases/latest), copy the `ts-fmod-plugin.dll` and the `ts-fmod-plugin` folder to `<game_install_location>/bin/win_x64/plugins`. (if the `plugins` folder does not exists, you can create one)<br>
@@ -38,7 +36,7 @@ Here's the correct folder structure:
     └───ts-fmod-plugin # copy from release
             master.bank # copy from specific game folder in release
             selected.bank.txt # copy from release | edit text in file with sound mod filename you want
-            sound_levels.txt # copy from release | edit the sound levels to you liking
+            sound_levels.txt # copy from release | edit the sound levels to your liking
             the_sound_mod_you_want_to_use.bank # example of sound mod
             the_sound_mod_you_want_to_use.bank.guids # example of sound mod
 ```
@@ -55,8 +53,6 @@ You will generally need to mute/lower the truck engine, exhaust and turbo sound 
 If you have the developer console enabled in-game you can switch sound mods without restarting by changing the filename in `selected.bank.txt` and then in the game console enter `sdk reload`. This will reload all telemetry plugins and cause this plugin to load the newly selected sound mod.
 
 You can change the sound levels in the `sound_levels.txt` file, you will just kind of need to play with them until you get something you like. Again you can use the `sdk reload` console command after you've changed these to reload the plugin with these new values.
-
-When the game updates you might need to update the `master.bank` file, it is located in the base.scs file for the specific game, in that file it is located in `/sound/master/`
 
 # Supported FMOD events and parameters
 Events:
@@ -80,3 +76,4 @@ Parameters:
 - rpm
 - wnd_left (and right)
 - surr_type
+- cabin_rot

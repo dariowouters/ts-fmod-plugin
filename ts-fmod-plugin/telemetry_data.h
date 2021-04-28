@@ -6,7 +6,10 @@ struct telemetry_data_t
     bool engine_enabled;
     float rpm;
 
+    int gear;
+
     float effective_throttle;
+    float effective_clutch;
     bool engine_brake;
     bool park_brake_on;
     bool brake_air_pressure_warning;

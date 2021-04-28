@@ -44,12 +44,22 @@ bool fmod_manager::load_selected_bank(const std::string& plugin_files_dir)
         return false;
     }
 
+    std::stringstream ss;
+    ss << "[ts-fmod-plugin] Using sound bank: '" << selected_bank_name_ << "'";
+    scs_log_(SCS_LOG_TYPE_message, ss.str().c_str());
+
     return true;
 }
 
 bool fmod_manager::init()
 {
-    CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    const auto co_init_res = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+
+    if (co_init_res != S_OK && co_init_res != S_FALSE)
+    {
+        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] CoInitializeEx Failed");
+        return false;
+    }
 
     auto plugin_files_dir = fs::current_path().generic_u8string() + "/plugins/ts-fmod-plugin/";
     auto res = FMOD::Studio::System::create(&system_);
@@ -64,6 +74,32 @@ bool fmod_manager::init()
         scs_log_(SCS_LOG_TYPE_error, (std::string("[ts-fmod-plugin] Could not initialize FMOD, ") + FMOD_ErrorString(res)).c_str());
         return false;
     }
+    res = system_->getCoreSystem(&core_system_);
+    if (res != FMOD_OK)
+    {
+        scs_log_(SCS_LOG_TYPE_error, (std::string("[ts-fmod-plugin] Could not load FMOD core system, ") + FMOD_ErrorString(res)).c_str());
+        return false;
+    }
+    int driver_count;
+    core_system_->getNumDrivers(&driver_count);
+    if (res != FMOD_OK)
+    {
+        scs_log_(SCS_LOG_TYPE_error, (std::string("[ts-fmod-plugin] Could not get FMOD driver count, ") + FMOD_ErrorString(res)).c_str());
+        return false;
+    }
+
+    for (int i = 0; i < driver_count; ++i)
+    {
+        char device_name[256];
+        res = core_system_->getDriverInfo(i, device_name, 256, nullptr, nullptr, nullptr, nullptr);
+        if (res != FMOD_OK)
+        {
+            scs_log_(SCS_LOG_TYPE_error, (std::string("[ts-fmod-plugin] Could not get FMOD driver[") + std::to_string(i) + "] " + FMOD_ErrorString(res)).c_str());
+            return false;
+        }
+        scs_log_(SCS_LOG_TYPE_message, (std::string("[ts-fmod-plugin] Found output device[") + std::to_string(i) + "] " + device_name).c_str());
+    }
+    scs_log_(SCS_LOG_TYPE_message, std::string("[ts-fmod-plugin] Selecting default output device (0)").c_str());
 
     FMOD::Studio::Bank* bank;
     system_->loadBankFile((plugin_files_dir + "master.bank").c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
@@ -157,6 +193,10 @@ float fmod_manager::get_sound_level_from_json(json j, const char* key, float def
         ss << "[ts-fmod-plugin] Could not read sound level '" << key << "', defaulting to " << defaultValue;
         scs_log_(SCS_LOG_TYPE_error, ss.str().c_str());
     }
+
+        ss.clear();
+        ss << "[ts-fmod-plugin] Setting sound level for '" << key << "' to " << val;
+        scs_log_(SCS_LOG_TYPE_message, ss.str().c_str());
 
     return val / 2;
 }

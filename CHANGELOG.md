@@ -1,3 +1,9 @@
+## 1.40.1
+ - Updated for 1.40
+ - Fixed engine brake
+    - Stopped engine brake from playing when in neutral or when throttle/clutch is pressed
+    - Added support for different levels of engine brake
+
 ## 1.39.6
  - Added rudimentary audio level customization
  - Fixed interior sounds being played when on an exterior view

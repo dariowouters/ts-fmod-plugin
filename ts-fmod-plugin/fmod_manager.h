@@ -7,16 +7,17 @@ using json = nlohmann::json;
 #include "fmod_event.h"
 
 struct sound_levels_t {
-    float master = 0.25;
-    float engine = 0.25;
-    float exhaust = 0.25;
-    float turbo = 0.25;
-    float interior = 0.5;
-    float windows_closed = 0.35;
+    float master = 0.25f;
+    float engine = 0.25f;
+    float exhaust = 0.25f;
+    float turbo = 0.25f;
+    float interior = 0.5f;
+    float windows_closed = 0.35f;
 };
 
 class fmod_manager
 {
+    FMOD::System* core_system_ = nullptr;
     FMOD::Studio::System* system_ = nullptr;
     FMOD::Studio::Bank* sound_bank_ = nullptr;
     std::string selected_bank_name_ = "";
