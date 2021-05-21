@@ -62,15 +62,13 @@ class some_truck_telem_data_t
     char pad_0218[20]; //0x0218
     float wipers_stick_state; //0x022C 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
     float wipers_state; //0x0230 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
-    char pad_0234[1824]; //0x0234
-    float rpm2_old; //0x0954
-    float turbo_pressure2_old; //0x0958
-    char pad_095C[16]; //0x095C
-    float effective_brake; //0x096C 0 = none, 1 = max
-    char pad_0970[4]; //0x0970
+    char pad_0234[1840]; //0x0234
+    float effective_throttle; //0x0964
+    float effective_brake; //0x0968 0 = none, 1 = max
+    char pad_096C[8]; //0x096C
     float effective_steering; //0x0974 1 = left, -1 = right
-    char pad_0978[68]; //0x0978
-    uint32_t steering_wheel; //0x09BC 0 = steering wheel = left, 512 = center, 1023 = right
+    char pad_0978[64]; //0x0978
+    uint32_t steering_wheel; //0x09B8 0 = steering wheel = left, 512 = center, 1023 = right
 
 
 public:
@@ -153,8 +151,10 @@ public:
 
 class truck_telem_data_parent_t
 {
-    char pad_0000[4336]; //0x0000
-    some_truck_telem_data_t *some_truck_telem_data; //0x10F0
+    char pad_0000[176]; //0x0000
+    char *current_timezone; //0x00B0
+    char pad_00B8[4080]; //0x00B8
+    class some_truck_telem_data_t *some_truck_telem_data; //0x10A8
 public:
     some_truck_telem_data_t* get_truck_telem_data() const
     {
@@ -164,8 +164,20 @@ public:
 
 class truck_telem_data_parent_parent_t
 {
-    char pad_0000[2512]; //0x0000
-    truck_telem_data_parent_t *truck_telem_data_parent_ptr; //0x09D0
+    char pad_0000[424]; //0x0000
+    char *home_dir; //0x01A8
+    char pad_01B0[1576]; //0x01B0
+    char *loaded_map_mbd; //0x07D8
+    char pad_07E0[16]; //0x07E0
+    float resolution_x; //0x07F0
+    float resolution_y; //0x07F4
+    char pad_07F8[36]; //0x07F8
+    float resolution_x2; //0x081C
+    float resolution_y2; //0x0820
+    char pad_0824[44]; //0x0824
+    char *game_name; //0x0850
+    char pad_0858[264]; //0x0858
+    class truck_telem_data_parent_t *truck_telem_data_parent_ptr; //0x0960
 public:
     truck_telem_data_parent_t* get_truck_telem_parent() const
     {
