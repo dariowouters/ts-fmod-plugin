@@ -153,8 +153,8 @@ class truck_telem_data_parent_t
 {
     char pad_0000[176]; //0x0000
     char *current_timezone; //0x00B0
-    char pad_00B8[4080]; //0x00B8
-    class some_truck_telem_data_t *some_truck_telem_data; //0x10A8
+    char pad_00B8[4070]; //0x00B0
+    class some_truck_telem_data_t *some_truck_telem_data; //0x10A0
 public:
     some_truck_telem_data_t* get_truck_telem_data() const
     {
