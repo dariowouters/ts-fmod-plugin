@@ -1,5 +1,8 @@
-## 1.41-exp_beta
- - Updated for 1.41 (experimental beta)
+## 1.41-beta
+ - Updated for 1.41 (beta)
+ - Support for loading multiple soundbanks
+ - Fixed closed windows affecting sounds on exterior camera
+ - Fixed handbrake sounds being reversed
 
 ## 1.40.1
  - Updated for 1.40

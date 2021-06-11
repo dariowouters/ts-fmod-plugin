@@ -62,10 +62,11 @@ class some_truck_telem_data_t
     char pad_0218[20]; //0x0218
     float wipers_stick_state; //0x022C 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
     float wipers_state; //0x0230 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
-    char pad_0234[1840]; //0x0234
-    float effective_throttle; //0x0964
-    float effective_brake; //0x0968 0 = none, 1 = max
-    char pad_096C[8]; //0x096C
+    char pad_0234[1828]; //0x0234
+    float turbo_pressure2; //0x0958
+    char pad_095C[16]; //0x095C
+    float effective_brake; //0x096C 0 = none, 1 = max
+    char pad_0970[4]; //0x0970
     float effective_steering; //0x0974 1 = left, -1 = right
     char pad_0978[64]; //0x0978
     uint32_t steering_wheel; //0x09B8 0 = steering wheel = left, 512 = center, 1023 = right
@@ -109,6 +110,19 @@ public:
     }
 };
 
+class unk_cabin_t
+{
+    char pad_0000[24]; //0x0000
+    float cabin_out; //0x0018
+    char pad_001C[108]; //0x001C
+
+public:
+    float get_cabin_out() const
+    {
+        return cabin_out;
+    }
+};
+
 class unk_interior // still need to figure out what this actually is
 {
     char pad_0000[184]; //0x0000
@@ -116,12 +130,15 @@ class unk_interior // still need to figure out what this actually is
     bool is_camera_inside; //0x00B9 1 if camera is inside, 0 when head through window
     char pad_00BA[2]; //0x00BA
     float camera_rotation_in_cabin; //0x00BC 0 = head straight, left is -, right is +, maybe different for UK??
-    int32_t should_have_echo_old; //0x00C0
-    char pad_00C4[12]; //0x00C4
-    class N00000C84 *N0000432E; //0x00D0
+    char pad_00C0[16]; //0x00C0
+    unk_cabin_t *unk_cabin_ptr; //0x00D0
     vec2s_t window_state; //0x00D8 0 = closed, 1 = open
-    char pad_00E0[6920]; //0x00E0
-    uint8_t should_have_echo; //0x1BE8
+    char pad_00E0[1752]; //0x00E0
+    class navigation_sound_events_arr *navigation_sound_events; //0x07B8
+    int64_t navigation_sound_events_count; //0x07C0
+    char pad_07C8[5152]; //0x07C8
+    bool should_have_echo; //0x1BE8
+
 
 public:
     uint8_t get_has_echo() const
@@ -147,14 +164,18 @@ public:
     {
         return camera_rotation_in_cabin;
     }
+    unk_cabin_t* get_unk_cabin() const
+    {
+        return unk_cabin_ptr;
+    }
 };
 
 class truck_telem_data_parent_t
 {
     char pad_0000[176]; //0x0000
     char *current_timezone; //0x00B0
-    char pad_00B8[4070]; //0x00B0
-    class some_truck_telem_data_t *some_truck_telem_data; //0x10A0
+    char pad_00B8[4104]; //0x00B8
+    some_truck_telem_data_t *some_truck_telem_data; //0x10C0
 public:
     some_truck_telem_data_t* get_truck_telem_data() const
     {
@@ -162,35 +183,12 @@ public:
     }
 };
 
-class truck_telem_data_parent_parent_t
-{
-    char pad_0000[424]; //0x0000
-    char *home_dir; //0x01A8
-    char pad_01B0[1576]; //0x01B0
-    char *loaded_map_mbd; //0x07D8
-    char pad_07E0[16]; //0x07E0
-    float resolution_x; //0x07F0
-    float resolution_y; //0x07F4
-    char pad_07F8[36]; //0x07F8
-    float resolution_x2; //0x081C
-    float resolution_y2; //0x0820
-    char pad_0824[44]; //0x0824
-    char *game_name; //0x0850
-    char pad_0858[264]; //0x0858
-    class truck_telem_data_parent_t *truck_telem_data_parent_ptr; //0x0960
-public:
-    truck_telem_data_parent_t* get_truck_telem_parent() const
-    {
-        return truck_telem_data_parent_ptr;
-    }
-};
-
 
 class economy_base_t
 {
     unk_interior *unk_interior_parent; //0x0000
-    char pad_0008[32]; //0x0008
-    truck_telem_data_parent_parent_t *truck_telem_data_parent_parent_ptr; //0x0028
+    truck_telem_data_parent_t *truck_telem_data_parent_ptr; //0x0008
+
 
 
 public:
@@ -198,9 +196,9 @@ public:
     {
         return unk_interior_parent;
     }
-    truck_telem_data_parent_parent_t* get_truck_telem_parent_parent() const
+    truck_telem_data_parent_t* get_truck_telem_parent() const
     {
-        return truck_telem_data_parent_parent_ptr;
+        return truck_telem_data_parent_ptr;
     }
 };
 
