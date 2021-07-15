@@ -44,6 +44,9 @@ Here's the correct folder structure:
 For any sound mods you want to add you have to copy the (usually located in `/sound/truck/`) `<sound_mod_name>.bank` and the `<sound_mod_name>.bank.guids` files from the mod to the `ts-fmod-plugin` folder, and then open the `selected.bank.txt` file in a text editor and change the text in the file to the filename of the mod (without the file extension).<br>
 So for example if the sound mod files are named `sound_mod.bank` and `sound_mod.bank.guids` you have to change the text in the `selected.bank.txt` file to `sound_mod`.
 
+You can load multiple sound banks at the same time by having the sound banks in selected.bank.txt each on a new line. These sound banks will be loaded top to bottom.
+If multiple sound banks include the same sound event it will only load the event from the first sound bank.
+
 Now you can load the game and the sound should work when you start your truck.
 
 ### Some extra info

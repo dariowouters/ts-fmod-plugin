@@ -19,8 +19,7 @@ class fmod_manager
 {
     FMOD::System* core_system_ = nullptr;
     FMOD::Studio::System* system_ = nullptr;
-    FMOD::Studio::Bank* sound_bank_ = nullptr;
-    std::string selected_bank_name_ = "";
+    std::vector<std::string> selected_bank_names_;
 
     scs_log_t scs_log_;
 

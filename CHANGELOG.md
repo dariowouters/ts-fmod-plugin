@@ -1,3 +1,11 @@
+## 1.41
+- Updated for 1.41
+- Support for loading multiple sound banks
+  - Possible to add multiple sound banks on separate lines in selected.bank.txt.
+  - Loads sound banks from top to bottom, will not load any sounds loaded by a previous sound bank.
+- Fixed closed windows affecting sounds on exterior camera
+- Fixed handbrake sounds being reversed
+
 ## 1.40.1
  - Updated for 1.40
  - Fixed engine brake
