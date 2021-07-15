@@ -1,6 +1,6 @@
 # FMOD sound plugin for ATS/ETS2
 
-### Only supports 1.40
+### Only supports 1.41
 
 A telemetry plugin for ATS/ETS2 that includes an FMOD instance so that you can use FMOD sound mods.
 
@@ -35,7 +35,7 @@ Here's the correct folder structure:
     │
     └───ts-fmod-plugin # copy from release
             master.bank # copy from specific game folder in release
-            selected.bank.txt # copy from release | edit text in file with sound mod filename you want
+            selected.bank.txt # copy from release | edit text in file with sound mod filename(s) you want
             sound_levels.txt # copy from release | edit the sound levels to your liking
             the_sound_mod_you_want_to_use.bank # example of sound mod
             the_sound_mod_you_want_to_use.bank.guids # example of sound mod
@@ -80,3 +80,4 @@ Parameters:
 - wnd_left (and right)
 - surr_type
 - cabin_rot
+- cabin_out
