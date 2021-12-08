@@ -130,14 +130,14 @@ class unk_interior // still need to figure out what this actually is
     bool is_camera_inside; //0x00B9 1 if camera is inside, 0 when head through window
     char pad_00BA[2]; //0x00BA
     float camera_rotation_in_cabin; //0x00BC 0 = head straight, left is -, right is +, maybe different for UK??
-    char pad_00C0[16]; //0x00C0
-    unk_cabin_t *unk_cabin_ptr; //0x00D0
-    vec2s_t window_state; //0x00D8 0 = closed, 1 = open
-    char pad_00E0[1752]; //0x00E0
-    class navigation_sound_events_arr *navigation_sound_events; //0x07B8
-    int64_t navigation_sound_events_count; //0x07C0
-    char pad_07C8[5152]; //0x07C8
-    bool should_have_echo; //0x1BE8
+    char pad_00C0[24]; //0x00C0
+    unk_cabin_t* unk_cabin_ptr; //0x00D8
+    vec2s_t window_state; //0x00E0 0 = closed, 1 = open
+    char pad_00E8[1752]; //0x00E8
+    class navigation_sound_events_arr* navigation_sound_events; //0x07C0
+    int64_t navigation_sound_events_count; //0x07C8
+    char pad_07D0[5152]; //0x07D0
+    bool should_have_echo; //0x1BF0
 
 
 public:
