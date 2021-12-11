@@ -96,7 +96,7 @@ bool fmod_manager::init()
         if (res != FMOD_OK)
         {
             scs_log_(SCS_LOG_TYPE_error, (std::string("[ts-fmod-plugin] Could not get FMOD driver[") + std::to_string(i) + "] " + FMOD_ErrorString(res)).c_str());
-            return false;
+            if (i == 0) return false; // Only fail if not able to get the default device
         }
         scs_log_(SCS_LOG_TYPE_message, (std::string("[ts-fmod-plugin] Found output device[") + std::to_string(i) + "] " + device_name).c_str());
     }
