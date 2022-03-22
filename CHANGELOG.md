@@ -1,3 +1,11 @@
+## 1.43.1
+- Updated for ATS 1.43.3.3 and ETS2 1.43.3.40
+  - Updated to FMOD v2.02.05
+
+## 1.43
+- Updated for 1.43
+- Fixed plugin not loading when a non-used audio device could not be loaded.
+
 ## 1.41
 - Updated for 1.41
 - Support for loading multiple sound banks
