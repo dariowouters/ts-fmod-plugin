@@ -1,7 +1,5 @@
 # FMOD sound plugin for ATS/ETS2
 
-### Only supports 1.43
-
 A telemetry plugin for ATS/ETS2 that includes an FMOD instance so that you can use FMOD sound mods.
 
 This is pretty useless in singleplayer because you could just load the mod directly in the game.<br>
