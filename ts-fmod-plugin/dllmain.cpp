@@ -232,7 +232,7 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
 
     scs_log = version_params->common.log;
 
-    scs_log(0, "[ts-fmod-plugin V1.44] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.");
+    scs_log(0, "[ts-fmod-plugin V1.45] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.");
 
     auto addr = pattern::scan("48 8B 05 ? ? ? ? 48 8B D9 8B 90 ? ? ? ? 48 8B 80 ? ? ? ? 48 8B 88 ? ? ? ? E8", game_base, image_size);
     economy_base_offset = addr + *reinterpret_cast<uint32_t*>(addr + 3) + 7 - 0x48;
