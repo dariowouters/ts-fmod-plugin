@@ -39,36 +39,40 @@ SCSAPI_VOID telemetry_pause(const scs_event_t event, const void* const event_inf
 
 bool should_engine_brake_sound_play()
 {
-    return telemetry_data.engine_brake && telemetry_data.effective_throttle < 0.05f && telemetry_data.gear != 0 && telemetry_data.effective_clutch < 0.05f;
+    return telemetry_data.engine_brake && telemetry_data.effective_throttle < 0.05f && telemetry_data.gear != 0 &&
+        telemetry_data.effective_clutch < 0.05f;
 }
 
 SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info, scs_context_t context)
 {
     fmod_manager_instance->set_event_parameter("engine/engine", "rpm", telemetry_data.rpm);
     fmod_manager_instance->set_event_parameter("engine/exhaust", "rpm", telemetry_data.rpm);
-    fmod_manager_instance->set_event_parameter("engine/engine", "load", telemetry_data.effective_throttle); // The game might use some other value, but this seems close enough
+    fmod_manager_instance->set_event_parameter("engine/engine", "load", telemetry_data.effective_throttle);
+    // The game might use some other value, but this seems close enough
     fmod_manager_instance->set_event_parameter("engine/exhaust", "load", telemetry_data.effective_throttle);
 
     if (reinterpret_cast<economy_base_t*>(economy_base_offset) != nullptr && economy_base_offset != NULL)
     {
         auto* const economy_base = reinterpret_cast<economy_base_t*>(economy_base_offset);
 
-        auto* const some_truck_telem_parent = economy_base->get_truck_telem_parent();
-        if (some_truck_telem_parent != nullptr)
+        auto* const game_ctrl = economy_base->get_game_ctrl();
+        if (game_ctrl != nullptr)
         {
-            auto* const truck_telem_data = some_truck_telem_parent->get_truck_telem_data();
-            if (truck_telem_data != nullptr)
+            auto* const game_actor = game_ctrl->get_game_actor();
+            if (game_actor != nullptr)
             {
-                const auto turbo_pressure = truck_telem_data->get_turbo_pressure();
+                const auto turbo_pressure = game_actor->get_turbo_pressure();
                 if (turbo_pressure >= 0 && turbo_pressure <= 1)
                 {
                     fmod_manager_instance->set_event_parameter("engine/turbo", "turbo", turbo_pressure);
                 }
 
-                const auto engine_state = truck_telem_data->get_engine_state();
+                const auto engine_state = game_actor->get_engine_state();
                 if (engine_state != stored_engine_state) // engine state changed TODO: Find start_bad
                 {
-                    if (engine_state > 0 && stored_engine_state == 0) { // engine is starting/running
+                    if (engine_state > 0 && stored_engine_state == 0)
+                    {
+                        // engine is starting/running
                         fmod_manager_instance->set_event_parameter("engine/engine", "play", 1);
                         fmod_manager_instance->set_event_parameter("engine/exhaust", "play", 1);
                         fmod_manager_instance->set_event_state("engine/engine", true);
@@ -86,30 +90,34 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                     stored_engine_state = engine_state;
                 }
 
-                fmod_manager_instance->set_event_parameter("engine/engine", "brake", should_engine_brake_sound_play() ? truck_telem_data->get_engine_brake_state() : 0.0f);
+                fmod_manager_instance->set_event_parameter("engine/engine",
+                                                           "brake",
+                                                           should_engine_brake_sound_play()
+                                                               ? game_actor->get_engine_brake_state()
+                                                               : 0.0f);
 
-                const auto hazard_warning = truck_telem_data->get_hazard_warning_state();
+                const auto hazard_warning = game_actor->get_hazard_warning_state();
                 if (!common::cmpf(hazard_warning, hazard_warning_state))
                 {
                     fmod_manager_instance->set_event_state("interior/stick_hazard_warning", true);
                     hazard_warning_state = hazard_warning;
                 }
 
-                const auto light_horn = truck_telem_data->get_light_horn_state();
+                const auto light_horn = game_actor->get_light_horn_state();
                 if (!common::cmpf(light_horn, light_horn_state))
                 {
                     fmod_manager_instance->set_event_state("interior/stick_light_horn", true);
                     light_horn_state = light_horn;
                 }
 
-                const auto stick_lights = truck_telem_data->get_light_switch_state();
+                const auto stick_lights = game_actor->get_light_switch_state();
                 if (!common::cmpf(stick_lights, light_stick_state))
                 {
                     fmod_manager_instance->set_event_state("interior/stick_lights", true);
                     light_stick_state = stick_lights;
                 }
 
-                const auto wipers_stick = truck_telem_data->get_wipers_state();
+                const auto wipers_stick = game_actor->get_wipers_state();
                 if (!common::cmpf(wipers_stick, wipers_stick_state))
                 {
                     fmod_manager_instance->set_event_state("interior/stick_wipers", true);
@@ -122,12 +130,20 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
         if (unk_interior_parent != nullptr)
         {
             const auto window_pos = unk_interior_parent->get_window_state();
-            if (window_pos.x >= 0 && window_pos.x <= 1) fmod_manager_instance->set_global_parameter("wnd_left", window_pos.x);
-            if (window_pos.y >= 0 && window_pos.y <= 1) fmod_manager_instance->set_global_parameter("wnd_right", window_pos.y);
-            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0) && unk_interior_parent->get_is_camera_inside())
+            if (window_pos.x >= 0 && window_pos.x <= 1)
+                fmod_manager_instance->set_global_parameter(
+                    "wnd_left",
+                    window_pos.x);
+            if (window_pos.y >= 0 && window_pos.y <= 1)
+                fmod_manager_instance->set_global_parameter(
+                    "wnd_right",
+                    window_pos.y);
+            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0) && unk_interior_parent->
+                get_is_camera_inside())
             {
                 fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->sound_levels.windows_closed);
-                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->sound_levels.windows_closed); // backward compatibility
+                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->sound_levels.windows_closed);
+                // backward compatibility
             }
             else
             {
@@ -150,7 +166,8 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                 fmod_manager_instance->set_global_parameter("cabin_out", unk_cabin->get_cabin_out());
             }
 
-            fmod_manager_instance->set_global_parameter("cabin_rot", unk_interior_parent->get_camera_rotation_in_cabin());
+            fmod_manager_instance->set_global_parameter("cabin_rot",
+                                                        unk_interior_parent->get_camera_rotation_in_cabin());
             fmod_manager_instance->set_global_parameter("surr_type", unk_interior_parent->get_has_echo());
         }
     }
@@ -179,7 +196,8 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
         was_park_brake_on = telemetry_data.park_brake_on;
     }
 
-    const byte current_blinker_stick = telemetry_data.lblinker ? 1 : telemetry_data.rblinker ? 2 : 0; // 1 if lblinker, 2 if rblinker, 0 if off
+    const byte current_blinker_stick = telemetry_data.lblinker ? 1 : telemetry_data.rblinker ? 2 : 0;
+    // 1 if lblinker, 2 if rblinker, 0 if off
     if (current_blinker_stick != indicator_stick_state && current_blinker_stick != 0)
     {
         fmod_manager_instance->set_event_state("interior/stick_blinker", true);
@@ -232,9 +250,12 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
 
     scs_log = version_params->common.log;
 
-    scs_log(0, "[ts-fmod-plugin V1.45.1] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.");
+    scs_log(0,
+            "[ts-fmod-plugin V1.46] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.");
 
-    auto addr = pattern::scan("48 8B 05 ? ? ? ? 48 8B D9 8B 90 ? ? ? ? 48 8B 80 ? ? ? ? 48 8B 88 ? ? ? ? E8", game_base, image_size);
+    auto addr = pattern::scan("48 8B 05 ? ? ? ? 48 8B D9 8B 90 ? ? ? ? 48 8B 80 ? ? ? ? 48 8B 88 ? ? ? ? E8",
+                              game_base,
+                              image_size);
     economy_base_offset = addr + *reinterpret_cast<uint32_t*>(addr + 3) + 7 - 0x48;
 
     std::stringstream ss;
@@ -288,18 +309,18 @@ SCSAPI_VOID scs_telemetry_shutdown(void)
     shutdown();
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain(HMODULE hModule,
+                      DWORD ul_reason_for_call,
+                      LPVOID lpReserved
+)
 {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
-        game_base = reinterpret_cast<uintptr_t>(GetModuleHandleA(NULL));
+        game_base = reinterpret_cast<uintptr_t>(GetModuleHandleA(nullptr));
         const auto* const header = reinterpret_cast<const IMAGE_DOS_HEADER*>(game_base);
-        const auto* const nt_header = reinterpret_cast<const IMAGE_NT_HEADERS64*>(reinterpret_cast<const uint8_t*>(header) + header->e_lfanew);
+        const auto* const nt_header = reinterpret_cast<const IMAGE_NT_HEADERS64*>(reinterpret_cast<const uint8_t*>(
+            header) + header->e_lfanew);
         image_size = nt_header->OptionalHeader.SizeOfImage;
     }
     return TRUE;
 }
-

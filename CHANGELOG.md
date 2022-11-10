@@ -1,3 +1,9 @@
+## 1.46
+- Updated to support 1.46
+
+## 1.45.1
+- Updated for ATS 1.45.2.1 and ETS2 1.45.1.4
+
 ## 1.45
 - Updated to support 1.45
 
