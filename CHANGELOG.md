@@ -1,3 +1,7 @@
+## 1.47
+- Updated to support 1.47
+- Added some extra (error) logging
+
 ## 1.46
 - Updated to support 1.46
 

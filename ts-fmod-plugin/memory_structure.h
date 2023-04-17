@@ -25,55 +25,55 @@ public:
     class game_actor_hud_u* game_actor_hud;             //0x0028
     char pad_0030[128];                                 //0x0030
     class game_trailer_actor_u* game_trailer_actor;     //0x00B0
-    char pad_00B8[64];                                  //0x00B8
+    char pad_00B8[76];                                  //0x00B8
     uint32_t current_camera;
-    //0x00F8 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
-    char pad_00FC[8];                 //0x00FC
-    uint32_t engine_state;            //0x0104 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
-    char pad_0108[72];                //0x0108
-    float speed_limiter;              //0x0150
-    float road_speed_limit;           //0x0154
-    char pad_0158[80];                //0x0158
-    uint16_t light_state;             //0x01A8 (flags) 6 = parking, 8 = low, 7 = high, 5 = beacons
-    char pad_01AA[2];                 //0x01AA
-    uint16_t additional_illumination; //0x01AC (flags) 3 = front, 4 = roof
-    char pad_01AE[14];                //0x01AE
-    float wipers_intermittent_time;   //0x01BC Countdown before wipers move again when in intermittent setting
-    float wipers_position;            //0x01C0 0 = down start, 1 = down end ???
-    float rpm;                        //0x01C4
-    float air_pressure;               //0x01C8
-    float brake_pressure;             //0x01CC
-    float max_air_pressure;           //0x01D0
-    char pad_01D4[8];                 //0x01D4
-    float oil_temp;                   //0x01DC
-    char pad_01E0[4];                 //0x01E0
-    float water_temp;                 //0x01E4
-    char pad_01E8[4];                 //0x01E8
-    float battery_voltage;            //0x01EC
-    char pad_01F0[8];                 //0x01F0
-    float turbo_pressure;             //0x01F8 ?
-    char pad_01FC[12];                //0x01FC
-    float light_switch;               //0x0208 0 = off, 0.5 = parking, 1 = low beam
-    float light_switch_state;         //0x020C 0 = off, 0.5 = parking, 1 = low beam (instant)
-    float high_beam_stick;            //0x0210 0 = off, 1 = on
-    float high_beam_state;            //0x0214 0 = off, 1 = on (instant)
-    float light_horn_stick;           //0x0218 0 = off, 1 = on
-    float light_horn_state;           //0x021C 0 = off, 1 = on (instant)
-    float indicator_stick;            //0x0220 0 = left indicator, 0.5 = none, 1 = right
-    float indicator_state;            //0x0224 0 = left indicator, 0.5 = none, 1 = right (instant)
-    float hazard_warning_btn;         //0x0228 0 = off, 1 = on
-    float hazard_warning_state;       //0x022C 0 = off, 1 = on (instant)
-    float beacon_switch;              //0x0230 0 = off, 1 = on
-    float beacon_state;               //0x0234 0 = off, 1 = on (instant)
-    char pad_0238[8];                 //0x0238
-    float handbrake_handle;           //0x0240 0 = off, 1 = on
-    float handbrake_state;            //0x0244 0 = off, 1 = on (instant)
-    char pad_0248[8];                 //0x0248
-    float engine_brake_stick;         //0x0250 0 = off, 1 = full; steps dependant on engine data
-    float engine_brake_state;         //0x0254 0 = off, 1 = full (instant); steps dependant on engine data
-    char pad_0258[20];                //0x0258
-    float wipers_stick;               //0x026C 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
-    float wipers_state;               //0x0270 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
+    //0x0104 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
+    char pad_0108[8];                 //0x0108
+    uint32_t engine_state;            //0x0110 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
+    char pad_0114[72];                //0x0114
+    float speed_limiter;              //0x015C
+    float road_speed_limit;           //0x0160
+    char pad_0164[64];                //0x0164
+    uint16_t light_state;             //0x01A4 (flags) 6 = parking, 8 = low, 7 = high, 5 = beacons
+    char pad_01A6[2];                 //0x01A6
+    uint16_t additional_illumination; //0x01A8 (flags) 3 = front, 4 = roof
+    char pad_01AA[14];                //0x01AA
+    float wipers_intermittent_time;   //0x01B8 Countdown before wipers move again when in intermittent setting
+    float wipers_position;            //0x01BC 0 = down start, 1 = down end ???
+    float rpm;                        //0x01C0
+    float air_pressure;               //0x01C4
+    float brake_pressure;             //0x01C8
+    float max_air_pressure;           //0x01CC
+    char pad_01D0[8];                 //0x01D0
+    float oil_temp;                   //0x01D8
+    char pad_01DC[4];                 //0x01DC
+    float water_temp;                 //0x01E0
+    char pad_01E4[4];                 //0x01E4
+    float battery_voltage;            //0x01E8
+    char pad_01EC[8];                 //0x01EC
+    float turbo_pressure;             //0x01F4 ?
+    char pad_01F8[12];                //0x01F8
+    float light_switch;               //0x0204 0 = off, 0.5 = parking, 1 = low beam
+    float light_switch_state;         //0x0208 0 = off, 0.5 = parking, 1 = low beam (instant)
+    float high_beam_stick;            //0x020C 0 = off, 1 = on
+    float high_beam_state;            //0x0210 0 = off, 1 = on (instant)
+    float light_horn_stick;           //0x0214 0 = off, 1 = on
+    float light_horn_state;           //0x0218 0 = off, 1 = on (instant)
+    float indicator_stick;            //0x021C 0 = left indicator, 0.5 = none, 1 = right
+    float indicator_state;            //0x0220 0 = left indicator, 0.5 = none, 1 = right (instant)
+    float hazard_warning_btn;         //0x0224 0 = off, 1 = on
+    float hazard_warning_state;       //0x0228 0 = off, 1 = on (instant)
+    float beacon_switch;              //0x022C 0 = off, 1 = on
+    float beacon_state;               //0x0230 0 = off, 1 = on (instant)
+    char pad_0234[8];                 //0x0234
+    float handbrake_handle;           //0x023C 0 = off, 1 = on
+    float handbrake_state;            //0x0240 0 = off, 1 = on (instant)
+    char pad_0244[8];                 //0x0244
+    float engine_brake_stick;         //0x024C 0 = off, 1 = full; steps dependant on engine data
+    float engine_brake_state;         //0x0250 0 = off, 1 = full (instant); steps dependant on engine data
+    char pad_0254[20];                //0x0254
+    float wipers_stick;               //0x0268 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
+    float wipers_state;               //0x026C 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
 
 
 public:
