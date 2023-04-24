@@ -7,10 +7,10 @@ using json = nlohmann::json;
 #include "fmod_event.h"
 
 struct sound_levels_t {
-    float master = 0.25f;
-    float engine = 0.25f;
-    float exhaust = 0.25f;
-    float turbo = 0.25f;
+    float master = 0.40f;
+    float engine = 0.45f;
+    float exhaust = 0.45f;
+    float turbo = 0.35f;
     float interior = 0.5f;
     float windows_closed = 0.35f;
 };
