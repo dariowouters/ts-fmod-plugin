@@ -6,7 +6,8 @@ using json = nlohmann::json;
 
 #include "fmod_event.h"
 
-struct sound_levels_t {
+struct sound_levels_t
+{
     float master = 0.25f;
     float engine = 0.25f;
     float exhaust = 0.25f;
@@ -27,11 +28,11 @@ class fmod_manager
     std::unordered_map<std::string, FMOD::Studio::Bus*> fmod_busses_map_;
 
 
-    bool load_selected_bank(const std::string& plugin_files_dir);
-    bool init_channels(const std::string& plugin_files_dir);
+    bool load_selected_bank(const std::filesystem::path& plugin_files_dir);
+    bool init_channels(const std::filesystem::path& plugin_files_dir);
 
-    float get_sound_level_from_json(json j, const char* key, float defaultValue);
-    bool load_sound_levels(const std::string& plugin_files_dir);
+    float get_sound_level_from_json(json j, const char* key, float default_value);
+    bool load_sound_levels(std::filesystem::path plugin_files_dir);
 
 public:
     sound_levels_t sound_levels;
@@ -54,4 +55,3 @@ public:
     FMOD_RESULT set_bus_volume(const char* bus_name, float value);
     FMOD_RESULT pause_bus(const char* bus_name, bool state);
 };
-

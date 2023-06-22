@@ -13,11 +13,12 @@ fmod_manager::~fmod_manager()
     CoUninitialize();
 }
 
-bool fmod_manager::load_selected_bank(const std::string& plugin_files_dir)
+bool fmod_manager::load_selected_bank(const std::filesystem::path& plugin_files_dir)
 {
-    const auto selected_bank_file_path = plugin_files_dir + "selected.bank.txt";
+    auto selected_bank_file_path = plugin_files_dir;
+    selected_bank_file_path.append("selected.bank.txt");
 
-    if (!fs::exists(selected_bank_file_path))
+    if (!exists(selected_bank_file_path))
     {
         scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not find the 'selected.bank.txt' file");
         return false;
@@ -35,9 +36,13 @@ bool fmod_manager::load_selected_bank(const std::string& plugin_files_dir)
     int i = 0;
     while (selected_bank_file >> bank_name)
     {
-        const auto res = system_->loadBankFile((plugin_files_dir + bank_name + ".bank").c_str(),
-                                               FMOD_STUDIO_LOAD_BANK_NORMAL,
-                                               &bank);
+        auto bank_file_path = plugin_files_dir;
+        bank_file_path.append(bank_name).concat(".bank");
+
+        const auto res = system_->loadBankFile(
+            bank_file_path.generic_u8string().c_str(),
+            FMOD_STUDIO_LOAD_BANK_NORMAL,
+            &bank);
         if (res != FMOD_OK)
         {
             std::stringstream ss;
@@ -63,8 +68,7 @@ bool fmod_manager::init()
         scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] CoInitializeEx Failed");
         return false;
     }
-
-    auto plugin_files_dir = fs::current_path().generic_u8string() + "/plugins/ts-fmod-plugin/";
+    const auto plugin_files_dir = fs::current_path().append("plugins/ts-fmod-plugin");
     auto res = FMOD::Studio::System::create(&system_);
     if (res != FMOD_OK)
     {
@@ -114,9 +118,13 @@ bool fmod_manager::init()
 
     FMOD::Studio::Bank* bank;
 
-    res = system_->loadBankFile((plugin_files_dir + "master.bank").c_str(),
+    auto master_bank_path = plugin_files_dir;
+    master_bank_path.append("master.bank");
+
+    res = system_->loadBankFile(master_bank_path.generic_u8string().c_str(),
                                 FMOD_STUDIO_LOAD_BANK_NORMAL,
                                 &bank);
+
     if (res != FMOD_OK)
     {
         std::stringstream ss;
@@ -166,15 +174,18 @@ bool fmod_manager::init()
     return true;
 }
 
-bool fmod_manager::init_channels(const std::string& plugin_files_dir)
+bool fmod_manager::init_channels(const std::filesystem::path& plugin_files_dir)
 {
     for (const std::string& bank_name : selected_bank_names_)
     {
         std::stringstream ss;
         ss << "[ts-fmod-plugin] Loading the events and busses for '" << bank_name << "'";
         scs_log_(SCS_LOG_TYPE_message, ss.str().c_str());
-        auto guids_file_path = plugin_files_dir + bank_name + ".bank.guids";
-        if (!fs::exists(guids_file_path))
+
+        auto guids_file_path = plugin_files_dir;
+        guids_file_path.append(bank_name).concat(".bank.guids");
+
+        if (!exists(guids_file_path))
         {
             scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not find the '*.bank.guids' file");
             return false;
@@ -261,11 +272,11 @@ float fmod_manager::get_sound_level_from_json(json j, const char* key, float def
     return val / 2;
 }
 
-bool fmod_manager::load_sound_levels(const std::string& plugin_files_dir)
+bool fmod_manager::load_sound_levels(std::filesystem::path plugin_files_dir)
 {
-    const auto sound_levels_file_path = plugin_files_dir + "sound_levels.txt";
+    const auto sound_levels_file_path = plugin_files_dir.append("sound_levels.txt");
 
-    if (!fs::exists(sound_levels_file_path))
+    if (!exists(sound_levels_file_path))
     {
         scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not find the 'sound_levels.txt' file");
         return false;

@@ -1,3 +1,6 @@
+## 1.47.1
+- Fixed issue with plugin not loading with Non-English characters in file path
+
 ## 1.47
 - Updated to support 1.47
 - Added some extra (error) logging
