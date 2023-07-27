@@ -7,13 +7,13 @@
 #include "memory.h"
 
 fmod_manager* fmod_manager_instance = nullptr;
-
 telemetry_data_t telemetry_data;
 
 scs_log_t scs_log;
 
 uintptr_t economy_base_offset = NULL;
 uintptr_t game_base = NULL;
+navigation_sound_event* last_played = NULL;
 DWORD image_size = 0;
 
 uint32_t stored_engine_state = 0;
@@ -169,6 +169,14 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             fmod_manager_instance->set_global_parameter("cabin_rot",
                                                         unk_interior_parent->get_camera_rotation_in_cabin());
             fmod_manager_instance->set_global_parameter("surr_type", unk_interior_parent->get_has_echo());
+
+            const auto now_playing_navigation_sound = unk_interior_parent->get_now_playing_navigation_sound();
+            if (now_playing_navigation_sound != NULL && last_played != now_playing_navigation_sound)
+            {
+                fmod_manager_instance->set_event_state(now_playing_navigation_sound->get_event_name(), true, true);
+            }
+            last_played = now_playing_navigation_sound;
+
         }
     }
 

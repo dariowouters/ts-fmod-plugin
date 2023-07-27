@@ -149,6 +149,11 @@ bool fmod_manager::init()
         scs_log_(SCS_LOG_TYPE_warning,
                  "Did not find an 'event:/engine/engine' event. You will not have engine sounds.");
     }
+    if (fmod_events_map_.find("event:/start") == fmod_events_map_.end())
+    {
+        scs_log_(SCS_LOG_TYPE_warning,
+            "Did not find an 'event:/start' event. You will not have navigation start sounds.");
+    }
     if (fmod_events_map_.find("engine/exhaust") == fmod_events_map_.end())
     {
         scs_log_(SCS_LOG_TYPE_warning,
@@ -170,6 +175,7 @@ bool fmod_manager::init()
 
     set_bus_volume("outside", sound_levels.windows_closed);
     set_bus_volume("exterior", sound_levels.windows_closed); // backward compatibility for 1.37 sound mods
+    set_bus_volume("game/navigation", sound_levels.navigation); // backward compatibility for 1.37 sound mods
 
     return true;
 }
@@ -310,6 +316,9 @@ bool fmod_manager::load_sound_levels(std::filesystem::path plugin_files_dir)
     sound_levels.turbo = get_sound_level_from_json(j, "turbo");
     sound_levels.interior = get_sound_level_from_json(j, "interior");
     sound_levels.windows_closed = get_sound_level_from_json(j, "exterior_when_windows_closed", 0.7f);
+    sound_levels.navigation = get_sound_level_from_json(j, "navigation", 0.5f);
+
+
 
     return true;
 }

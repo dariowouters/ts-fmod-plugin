@@ -14,6 +14,7 @@ struct sound_levels_t
     float turbo = 0.25f;
     float interior = 0.5f;
     float windows_closed = 0.35f;
+    float navigation = 0.5;
 };
 
 class fmod_manager
