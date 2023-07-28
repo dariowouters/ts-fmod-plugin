@@ -175,7 +175,7 @@ bool fmod_manager::init()
 
     set_bus_volume("outside", sound_levels.windows_closed);
     set_bus_volume("exterior", sound_levels.windows_closed); // backward compatibility for 1.37 sound mods
-    set_bus_volume("game/navigation", sound_levels.navigation); // backward compatibility for 1.37 sound mods
+    set_bus_volume("game/navigation", sound_levels.navigation);
 
     return true;
 }
