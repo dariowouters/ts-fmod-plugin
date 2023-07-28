@@ -131,7 +131,7 @@ public:
     }
 };
 
-class sound_event_t
+class sound_t
 {
     class sound_player* sound_instance;   //0x0000
     char pad_0008[0x28];                  //0x0008
@@ -155,7 +155,7 @@ public:
     }
 };
 
-class navigation_sound_event
+class navigation_voice_event
 {
     uint32_t pad_0000;                  //0x0000
     uint32_t pad_0004;                  //0x0004
@@ -163,11 +163,11 @@ class navigation_sound_event
     uint32_t pad_0010;                  //0x0010
     uint32_t pad_0014;                  //0x0014
     class navigation* navi_instance;    //0x0018
-    sound_event_t* sound_event;         //0x0020
+    sound_t* sound_instance;         //0x0020
 
 public:
-    sound_event_t* get_sound_event() const {
-        return sound_event;
+    sound_t* get_sound_instance() const {
+        return sound_instance;
     }
     char* const get_event_name() const {
         return event_name;
@@ -188,9 +188,9 @@ class unk_interior // still need to figure out what this actually is
     unk_cabin_t* unk_cabin_ptr; //0x00D8
     vec2s_t window_state; //0x00E0 0 = closed, 1 = open
     char pad_00E8[1648]; //0x00E8
-    navigation_sound_event* now_playing_navigation_sound;  // 0x0758
+    navigation_voice_event* now_playing_navigation_sound;  // 0x0758
     char pad_0768[88]; //0x0768
-    navigation_sound_event** navigation_sound_events; //0x07C0
+    navigation_voice_event** navigation_sound_events; //0x07C0
     int64_t navigation_sound_events_count; //0x07C8
     char pad_07D0[5152]; //0x07D0
     bool should_have_echo; //0x1BF0
@@ -227,7 +227,7 @@ public:
         return unk_cabin_ptr;
     }
 
-    navigation_sound_event** get_navigation_sound_events() {
+    navigation_voice_event** get_navigation_sound_events() {
         return navigation_sound_events;
     }
     //0x07C0
@@ -235,7 +235,7 @@ public:
         return navigation_sound_events_count;
     }; //0x07C8
 
-    navigation_sound_event* get_now_playing_navigation_sound() {
+    navigation_voice_event* get_now_playing_navigation_sound() {
         return now_playing_navigation_sound;
     }
 

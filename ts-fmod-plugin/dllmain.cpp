@@ -14,7 +14,7 @@ scs_log_t scs_log;
 
 uintptr_t economy_base_offset = NULL;
 uintptr_t game_base = NULL;
-navigation_sound_event* last_played = NULL;
+navigation_voice_event* last_played = NULL;
 DWORD image_size = 0;
 
 uint32_t stored_engine_state = 0;
