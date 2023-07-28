@@ -7,6 +7,7 @@
 #include "memory.h"
 
 fmod_manager* fmod_manager_instance = nullptr;
+
 telemetry_data_t telemetry_data;
 
 scs_log_t scs_log;
