@@ -70,6 +70,45 @@ Events:
 - interior/stick_light_horn
 - interior/stick_lights
 - interior/stick_wipers
+- and_then_exit_left
+- and_then_exit_right
+- and_then_go_straight
+- and_then_keep_left
+- and_then_keep_right
+- and_then_turn_left
+- and_then_turn_right
+- compound_exit_left
+- compound_exit_right
+- compound_go_straight
+- compound_keep_left
+- compound_keep_right
+- compound_turn_left
+- compound_turn_right
+- exit_left
+- exit_now
+- exit_right
+- finish
+- go_straight
+- keep_left
+- keep_right
+- prepare_exit_left
+- prepare_exit_right
+- prepare_turn_left
+- prepare_turn_right
+- recomputing
+- roundabout_1
+- roundabout_2
+- roundabout_3
+- roundabout_4
+- roundabout_5
+- roundabout_6
+- speed_signal
+- speed_warning
+- start
+- turn_left
+- turn_right
+- u_turn
+
 
 Parameters:
 - brake

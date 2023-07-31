@@ -4,5 +4,6 @@
     "exhaust": 0.5,
     "turbo": 0.5,
     "interior": 1,
+    "navigation": 0.5,
     "exterior_when_windows_closed": 0.75
 }

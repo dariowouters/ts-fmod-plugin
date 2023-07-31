@@ -131,6 +131,52 @@ public:
     }
 };
 
+class sound_t
+{
+    class sound_player* sound_instance;   //0x0000
+    char pad_0008[0x28];                  //0x0008
+    uint32_t is_playing;                  //0x0030  1:playing, 4:stop? maybe?
+    uint32_t something;                   //0x0034
+    class gl* glsl;                       //0x0038
+    char pad_003c[0x18];                  //0x0040
+    class gl* glsl2;                      //0x0060
+    char* sound_event_name_with_filename; //0x0060
+    char pad_0068[0x50];                  //0x0068
+
+public:
+    uint32_t get_is_playing() const
+    {
+        return is_playing;
+    }
+
+    char* const get_sound_event_name_with_file_name() const
+    {
+        return sound_event_name_with_filename;
+    }
+};
+
+class navigation_voice_event
+{
+    uint32_t pad_0000;                  //0x0000
+    uint32_t pad_0004;                  //0x0004
+    char* event_name;                   //0x0008
+    uint32_t pad_0010;                  //0x0010
+    uint32_t pad_0014;                  //0x0014
+    class navigation* navi_instance;    //0x0018
+    sound_t* sound_instance;         //0x0020
+
+public:
+    sound_t* get_sound_instance() const {
+        return sound_instance;
+    }
+    char* const get_event_name() const {
+        return event_name;
+    }
+};
+
+
+
+
 class unk_interior // still need to figure out what this actually is
 {
     char pad_0000[184]; //0x0000
@@ -141,8 +187,10 @@ class unk_interior // still need to figure out what this actually is
     char pad_00C0[24]; //0x00C0
     unk_cabin_t* unk_cabin_ptr; //0x00D8
     vec2s_t window_state; //0x00E0 0 = closed, 1 = open
-    char pad_00E8[1752]; //0x00E8
-    class navigation_sound_events_arr* navigation_sound_events; //0x07C0
+    char pad_00E8[1648]; //0x00E8
+    navigation_voice_event* now_playing_navigation_sound;  // 0x0758
+    char pad_0768[88]; //0x0768
+    navigation_voice_event** navigation_sound_events; //0x07C0
     int64_t navigation_sound_events_count; //0x07C8
     char pad_07D0[5152]; //0x07D0
     bool should_have_echo; //0x1BF0
@@ -178,6 +226,19 @@ public:
     {
         return unk_cabin_ptr;
     }
+
+    navigation_voice_event** get_navigation_sound_events() {
+        return navigation_sound_events;
+    }
+    //0x07C0
+    int64_t get_navigation_sound_events_count() {
+        return navigation_sound_events_count;
+    }; //0x07C8
+
+    navigation_voice_event* get_now_playing_navigation_sound() {
+        return now_playing_navigation_sound;
+    }
+
 };
 
 class game_ctrl_u
