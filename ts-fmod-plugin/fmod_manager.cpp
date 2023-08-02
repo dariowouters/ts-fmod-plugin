@@ -9,6 +9,7 @@ fmod_manager::fmod_manager(const scs_log_t scs_log) : scs_log_(scs_log)
 
 fmod_manager::~fmod_manager()
 {
+    delete config;
     system_->release();
     CoUninitialize();
 }
@@ -147,20 +148,20 @@ bool fmod_manager::init()
     if (fmod_events_map_.find("engine/engine") == fmod_events_map_.end())
     {
         scs_log_(SCS_LOG_TYPE_warning,
-                 "Did not find an 'event:/engine/engine' event. You will not have engine sounds.");
+                 "[ts-fmod-plugin] Did not find an 'event:/engine/engine' event. You will not have engine sounds.");
     }
     if (fmod_events_map_.find("engine/exhaust") == fmod_events_map_.end())
     {
         scs_log_(SCS_LOG_TYPE_warning,
-                 "Did not find an 'event:/engine/exhaust' event. You will not have exhaust sounds.");
+                 "[ts-fmod-plugin] Did not find an 'event:/engine/exhaust' event. You will not have exhaust sounds.");
     }
     if (fmod_events_map_.find("engine/turbo") == fmod_events_map_.end())
     {
         scs_log_(SCS_LOG_TYPE_warning,
-                 "Did not find an 'event:/engine/turbo' event. You will not have turbo sounds.");
+                 "[ts-fmod-plugin] Did not find an 'event:/engine/turbo' event. You will not have turbo sounds.");
     }
 
-    //check navigation vocies was loaded 
+    //check navigation vocies was loaded
     {
         std::stringstream navi_event_error_ss;
         size_t navigation_event_error_count = 0;
@@ -204,13 +205,14 @@ bool fmod_manager::init()
             "start",
             "turn_left",
             "turn_right",
-            "u_turn" };
+            "u_turn"
+        };
 
-        for (int i = 0; i < navigation_events_count; i++)
+        for (auto& navigation_event : navigation_events)
         {
-            if (fmod_events_map_.find(navigation_events[i]) == fmod_events_map_.end())
+            if (fmod_events_map_.find(navigation_event) == fmod_events_map_.end())
             {
-                navi_event_error_ss << navigation_events[i] << ",";
+                navi_event_error_ss << navigation_event << ",";
                 navigation_event_error_count++;
             }
         }
@@ -219,27 +221,33 @@ bool fmod_manager::init()
         if (navigation_event_error_count == navigation_events_count)
         {
             scs_log_(SCS_LOG_TYPE_warning,
-                "Did not find any navigation event. You will not have navigation voices.");
-        } else if (log.length() > 1)
+                     "[ts-fmod-plugin] Did not find any navigation event. You will not have navigation voices.");
+        }
+        else if (log.length() > 1)
         {
             log = log.erase(log.length() - 1);
-            std::string err = "Did not find an navigation event. You will not have ( " + log + " ) vocies. ";
+            std::string err = "[ts-fmod-plugin] Did not find an navigation event. You will not have ( " + log +
+                " ) voices.";
             scs_log_(SCS_LOG_TYPE_warning,
-                err.c_str());
+                     err.c_str());
         }
     }
 
-    load_sound_levels(plugin_files_dir);
+    auto config_path = plugin_files_dir;
+    config_path.append("sound_levels.txt");
+    config = new ::config(scs_log_, config_path);
 
-    set_bus_volume("", sound_levels.master);
-    set_bus_volume("outside/exterior/truck_engine", sound_levels.engine);
-    set_bus_volume("outside/exterior/truck_exhaust", sound_levels.exhaust);
-    set_bus_volume("outside/exterior/truck_turbo", sound_levels.turbo);
-    set_bus_volume("cabin/interior", sound_levels.interior);
+    config->load_config();
 
-    set_bus_volume("outside", sound_levels.windows_closed);
-    set_bus_volume("exterior", sound_levels.windows_closed); // backward compatibility for 1.37 sound mods
-    set_bus_volume("game/navigation", sound_levels.navigation);
+    set_bus_volume("", config->master);
+    set_bus_volume("outside/exterior/truck_engine", config->engine);
+    set_bus_volume("outside/exterior/truck_exhaust", config->exhaust);
+    set_bus_volume("outside/exterior/truck_turbo", config->turbo);
+    set_bus_volume("cabin/interior", config->interior);
+
+    set_bus_volume("outside", config->windows_closed);
+    set_bus_volume("exterior", config->windows_closed); // backward compatibility for 1.37 sound mods
+    set_bus_volume("game/navigation", config->navigation);
 
     return true;
 }
@@ -314,79 +322,6 @@ bool fmod_manager::init_channels(const std::filesystem::path& plugin_files_dir)
     return true;
 }
 
-float fmod_manager::get_sound_level_from_json(json j, const char* key, float default_value = 1.0f)
-{
-    float val = default_value;
-    if (j.contains(key) && j[key].is_number())
-    {
-        val = j[key].get<float>();
-        if (val < 0.0f)
-        {
-            std::stringstream ss;
-            ss << "[ts-fmod-plugin] Invalid value for sound level '" << key <<
-                "', value should be more than 0. Defaulting to " << default_value;
-            scs_log_(SCS_LOG_TYPE_error, ss.str().c_str());
-            val = default_value;
-        }
-    }
-    else
-    {
-        std::stringstream ss;
-        ss << "[ts-fmod-plugin] Could not read sound level '" << key << "', defaulting to " << default_value;
-        scs_log_(SCS_LOG_TYPE_error, ss.str().c_str());
-    }
-    std::stringstream ss;
-    ss << "[ts-fmod-plugin] Setting sound level for '" << key << "' to " << val;
-    scs_log_(SCS_LOG_TYPE_message, ss.str().c_str());
-
-    return val / 2;
-}
-
-bool fmod_manager::load_sound_levels(std::filesystem::path plugin_files_dir)
-{
-    const auto sound_levels_file_path = plugin_files_dir.append("sound_levels.txt");
-
-    if (!exists(sound_levels_file_path))
-    {
-        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not find the 'sound_levels.txt' file");
-        return false;
-    }
-
-    std::ifstream sound_levels_file(sound_levels_file_path);
-    std::string line;
-
-    if (!sound_levels_file.is_open())
-    {
-        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not read the 'sound_levels.txt' file");
-        return false;
-    }
-
-    json j;
-
-    try
-    {
-        sound_levels_file >> j;
-    }
-    catch (json::parse_error& e)
-    {
-        scs_log_(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not parse JSON from 'sound_levels.txt' ");
-        return false;
-    }
-
-
-    sound_levels.master = get_sound_level_from_json(j, "master");
-    sound_levels.engine = get_sound_level_from_json(j, "engine");
-    sound_levels.exhaust = get_sound_level_from_json(j, "exhaust");
-    sound_levels.turbo = get_sound_level_from_json(j, "turbo");
-    sound_levels.interior = get_sound_level_from_json(j, "interior");
-    sound_levels.windows_closed = get_sound_level_from_json(j, "exterior_when_windows_closed", 0.7f);
-    sound_levels.navigation = get_sound_level_from_json(j, "navigation", 0.5f);
-
-
-
-    return true;
-}
-
 void fmod_manager::set_paused(const bool state)
 {
     pause_bus("", state); // pause/unpause the main bus ('bus:/')
@@ -404,7 +339,7 @@ FMOD::Studio::Bus* fmod_manager::get_bus(const char* name)
 
 std::unique_ptr<fmod_event> fmod_manager::get_event(const char* name)
 {
-    auto res = fmod_events_map_.find(name);
+    const auto res = fmod_events_map_.find(name);
     if (res == fmod_events_map_.end())
     {
         return nullptr;

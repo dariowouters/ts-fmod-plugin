@@ -14,7 +14,7 @@ scs_log_t scs_log;
 
 uintptr_t economy_base_offset = NULL;
 uintptr_t game_base = NULL;
-navigation_voice_event* last_played = NULL;
+navigation_voice_event* last_played = nullptr;
 DWORD image_size = 0;
 
 uint32_t stored_engine_state = 0;
@@ -54,12 +54,12 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
 
     if (reinterpret_cast<economy_base_t*>(economy_base_offset) != nullptr && economy_base_offset != NULL)
     {
-        auto* const economy_base = reinterpret_cast<economy_base_t*>(economy_base_offset);
+        const auto* economy_base = reinterpret_cast<economy_base_t*>(economy_base_offset);
 
-        auto* const game_ctrl = economy_base->get_game_ctrl();
+        const auto* game_ctrl = economy_base->get_game_ctrl();
         if (game_ctrl != nullptr)
         {
-            auto* const game_actor = game_ctrl->get_game_actor();
+            const auto* game_actor = game_ctrl->get_game_actor();
             if (game_actor != nullptr)
             {
                 const auto turbo_pressure = game_actor->get_turbo_pressure();
@@ -142,8 +142,8 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0) && unk_interior_parent->
                 get_is_camera_inside())
             {
-                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->sound_levels.windows_closed);
-                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->sound_levels.windows_closed);
+                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->config->windows_closed);
+                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->config->windows_closed);
                 // backward compatibility
             }
             else
@@ -154,14 +154,14 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
 
             if (unk_interior_parent->get_is_on_interior_cam())
             {
-                fmod_manager_instance->set_bus_volume("cabin/interior", fmod_manager_instance->sound_levels.interior);
+                fmod_manager_instance->set_bus_volume("cabin/interior", fmod_manager_instance->config->interior);
             }
             else
             {
                 fmod_manager_instance->set_bus_volume("cabin/interior", 0);
             }
 
-            auto* const unk_cabin = unk_interior_parent->get_unk_cabin();
+            const auto* unk_cabin = unk_interior_parent->get_unk_cabin();
             if (unk_cabin != nullptr)
             {
                 fmod_manager_instance->set_global_parameter("cabin_out", unk_cabin->get_cabin_out());
@@ -172,12 +172,11 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             fmod_manager_instance->set_global_parameter("surr_type", unk_interior_parent->get_has_echo());
 
             const auto now_playing_navigation_sound = unk_interior_parent->get_now_playing_navigation_sound();
-            if (now_playing_navigation_sound != NULL && last_played != now_playing_navigation_sound)
+            if (now_playing_navigation_sound != nullptr && last_played != now_playing_navigation_sound)
             {
                 fmod_manager_instance->set_event_state(now_playing_navigation_sound->get_event_name(), true, true);
             }
             last_played = now_playing_navigation_sound;
-
         }
     }
 
