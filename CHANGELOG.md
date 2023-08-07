@@ -1,3 +1,8 @@
+## 1.48
+- Updated to support 1.48
+- Support for navigation voice mods
+- Added version check so plugin won't load on an unsupported game version
+
 ## 1.47.1
 - Fixed issue with plugin not loading with Non-English characters in file path
 

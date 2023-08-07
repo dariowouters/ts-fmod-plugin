@@ -51,6 +51,8 @@ Now you can load the game and the sound should work when you start your truck.
 
 You will generally need to mute/lower the truck engine, exhaust and turbo sound channels in the in-game settings to prevent double sounds. If the sound mod you're using includes interior sounds you will also have to mute/lower them in-game.
 
+For using navigation sound mods you have to have the voice navigation enabled (with a voice pack selected) in the game settings, but the 'Voice navigation volume' needs to be muted.
+
 If you have the developer console enabled in-game you can switch sound mods without restarting by changing the filename in `selected.bank.txt` and then in the game console enter `sdk reload`. This will reload all telemetry plugins and cause this plugin to load the newly selected sound mod.
 
 You can change the sound levels in the `sound_levels.txt` file, you will just kind of need to play with them until you get something you like. Again you can use the `sdk reload` console command after you've changed these to reload the plugin with these new values.

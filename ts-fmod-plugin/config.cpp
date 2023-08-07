@@ -34,7 +34,10 @@ void config::upgrade_to_v2(const json& j)
     read_value(j, "exhaust", &exhaust);
     read_value(j, "turbo", &turbo);
     read_value(j, "interior", &interior);
-    read_value(j, "navigation", &navigation);
+    if (read_value(j, "navigation", &navigation))
+    {
+        navigation /= 2;
+    }
     read_value(j, "exterior_when_windows_closed", &windows_closed);
     master /= 2;
     engine /= 2;
@@ -42,7 +45,7 @@ void config::upgrade_to_v2(const json& j)
     turbo /= 2;
     interior /= 2;
     windows_closed /= 2;
-    navigation /= 2;
+
     save_config();
 }
 

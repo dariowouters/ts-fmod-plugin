@@ -136,7 +136,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>$(solutiondir)ts-fmod-plugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(solutiondir)lib/fmod_vc.lib;$(solutiondir)lib/fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(solutiondir)lib/fmod_vc.lib;$(solutiondir)lib/fmodstudio_vc.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)$(Platform)\$(Configuration)\$(targetfilename)" "$(SolutionDir)dist\$(targetfilename)"</Command>
@@ -162,7 +162,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(solutiondir)lib/fmod_vc.lib;$(solutiondir)lib/fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(solutiondir)lib/fmod_vc.lib;$(solutiondir)lib/fmodstudio_vc.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>$(solutiondir)ts-fmod-plugin.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>

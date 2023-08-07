@@ -232,6 +232,43 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
     fmod_manager_instance->update();
 }
 
+
+// https://stackoverflow.com/questions/940707/how-do-i-programmatically-get-the-version-of-a-dll-or-exe-file
+DWORD get_product_version()
+{
+    DWORD ver_handle = 0;
+    UINT size = 0;
+    LPBYTE lp_buffer = nullptr;
+    char module_file_name[MAX_PATH];
+    module_file_name[0] = '\0';
+    GetModuleFileNameA(nullptr, module_file_name, sizeof(module_file_name));
+    const DWORD ver_size = GetFileVersionInfoSizeA(module_file_name, &ver_handle);
+
+    DWORD version = 0;
+
+    if (ver_size != NULL)
+    {
+        const auto ver_data = new char[ver_size];
+
+        if (GetFileVersionInfoA(module_file_name, ver_handle, ver_size, ver_data))
+        {
+            if (VerQueryValueA(ver_data, "\\", reinterpret_cast<void* *>(&lp_buffer), &size))
+            {
+                if (size)
+                {
+                    if (const auto ver_info = reinterpret_cast<VS_FIXEDFILEINFO*>(lp_buffer); ver_info->dwSignature ==
+                        0xfeef04bd)
+                    {
+                        version = (ver_info->dwFileVersionMS >> 0) & 0xffff;
+                    }
+                }
+            }
+        }
+        delete[] ver_data;
+    }
+    return version;
+}
+
 void register_telem_channels()
 {
     register_channel(TRUCK_CHANNEL_engine_rpm, SCS_U32_NIL, float, rpm)
@@ -257,16 +294,27 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
     const auto* const version_params = reinterpret_cast<const scs_telemetry_init_params_v101_t*>(params);
 
     scs_log = version_params->common.log;
+    const auto game_version = get_product_version();
 
-    scs_log(0,
-            "[ts-fmod-plugin V1.47.1] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.");
-
-    auto addr = pattern::scan("48 8B 05 ? ? ? ? 48 8B D9 8B 90 ? ? ? ? 48 8B 80 ? ? ? ? 48 8B 88 ? ? ? ? E8",
-                              game_base,
-                              image_size);
-    economy_base_offset = addr + *reinterpret_cast<uint32_t*>(addr + 3) + 7 - 0x48;
-
+    if (game_version != common::supported_game_version)
+    {
+        std::stringstream ss;
+        ss << "[ts-fmod-plugin V" << common::plugin_version << "] Detected game version 1." << game_version
+            << " while plugin is made for version 1." << common::supported_game_version <<
+            ". The plugin will not load to prevent crashes.";
+        scs_log(SCS_LOG_TYPE_error, ss.str().c_str());
+        return SCS_RESULT_generic_error;
+    }
     std::stringstream ss;
+    ss << "[ts-fmod-plugin V" << common::plugin_version <<
+        "] Searching for economy offset... If this is one of the last messages in the log after a crash, try disabling this plugin.";
+    scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
+
+    const auto addr = pattern::scan("48 8B 05 ? ? ? ? 48 8B D9 8B 90 ? ? ? ? 48 8B 80 ? ? ? ? 48 8B 88 ? ? ? ? E8",
+                                    game_base,
+                                    image_size);
+    economy_base_offset = addr + *reinterpret_cast<uint32_t*>(addr + 3) + 7 - 0x48;
+    ss.str("");
     ss << "[ts-fmod-plugin] Found economy offset &" << std::hex << (economy_base_offset - game_base);
     scs_log(0, ss.str().c_str());
 
@@ -325,8 +373,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
         game_base = reinterpret_cast<uintptr_t>(GetModuleHandleA(nullptr));
-        const auto* const header = reinterpret_cast<const IMAGE_DOS_HEADER*>(game_base);
-        const auto* const nt_header = reinterpret_cast<const IMAGE_NT_HEADERS64*>(reinterpret_cast<const uint8_t*>(
+        const auto* header = reinterpret_cast<const IMAGE_DOS_HEADER*>(game_base);
+        const auto* nt_header = reinterpret_cast<const IMAGE_NT_HEADERS64*>(reinterpret_cast<const uint8_t*>(
             header) + header->e_lfanew);
         image_size = nt_header->OptionalHeader.SizeOfImage;
     }

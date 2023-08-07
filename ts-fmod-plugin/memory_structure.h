@@ -248,8 +248,8 @@ class game_ctrl_u
 {
     char pad_0000[176];       //0x0000
     char* current_timezone;   //0x00B0
-    char pad_00B8[4192];      //0x00B8
-    game_actor_u* game_actor; //0x1118
+    char pad_00B8[4184];      //0x00B8
+    game_actor_u* game_actor; //0x1110
 
 public:
     game_actor_u* get_game_actor() const
