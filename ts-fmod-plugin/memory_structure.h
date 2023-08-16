@@ -1,80 +1,77 @@
 #pragma once
 
-struct vec2s_t
+struct vec2s_t // Size: 0x0008
 {
 public:
-    float x;
-    float y;
+    float x; // 0x0000 (0x04)
+    float y; // 0x0004 (0x04)
 };
 
-struct vec3s_t
+struct vec3s_t // Size: 0x000C
 {
 public:
-    float x;
-    float y;
-    float z;
+    float x; // 0x0000 (0x04)
+    float y; // 0x0004 (0x04)
+    float z; // 0x0008 (0x04)
 };
-
 
 class game_actor_u
 {
 public:
-    char pad_0010[24];                                  //0x0000
-    class game_physics_vehicle_u* game_physics_vehicle; //0x0018
-    class visual_interior_u* visual_interior;           //0x0020
-    class game_actor_hud_u* game_actor_hud;             //0x0028
-    char pad_0030[128];                                 //0x0030
-    class game_trailer_actor_u* game_trailer_actor;     //0x00B0
-    char pad_00B8[76];                                  //0x00B8
-    uint32_t current_camera;
-    //0x0104 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
-    char pad_0108[8];                 //0x0108
-    uint32_t engine_state;            //0x0110 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
-    char pad_0114[72];                //0x0114
-    float speed_limiter;              //0x015C
-    float road_speed_limit;           //0x0160
-    char pad_0164[64];                //0x0164
-    uint16_t light_state;             //0x01A4 (flags) 6 = parking, 8 = low, 7 = high, 5 = beacons
-    char pad_01A6[2];                 //0x01A6
-    uint16_t additional_illumination; //0x01A8 (flags) 3 = front, 4 = roof
-    char pad_01AA[14];                //0x01AA
-    float wipers_intermittent_time;   //0x01B8 Countdown before wipers move again when in intermittent setting
-    float wipers_position;            //0x01BC 0 = down start, 1 = down end ???
-    float rpm;                        //0x01C0
-    float air_pressure;               //0x01C4
-    float brake_pressure;             //0x01C8
-    float max_air_pressure;           //0x01CC
-    char pad_01D0[8];                 //0x01D0
-    float oil_temp;                   //0x01D8
-    char pad_01DC[4];                 //0x01DC
-    float water_temp;                 //0x01E0
-    char pad_01E4[4];                 //0x01E4
-    float battery_voltage;            //0x01E8
-    char pad_01EC[8];                 //0x01EC
-    float turbo_pressure;             //0x01F4 ?
-    char pad_01F8[12];                //0x01F8
-    float light_switch;               //0x0204 0 = off, 0.5 = parking, 1 = low beam
-    float light_switch_state;         //0x0208 0 = off, 0.5 = parking, 1 = low beam (instant)
-    float high_beam_stick;            //0x020C 0 = off, 1 = on
-    float high_beam_state;            //0x0210 0 = off, 1 = on (instant)
-    float light_horn_stick;           //0x0214 0 = off, 1 = on
-    float light_horn_state;           //0x0218 0 = off, 1 = on (instant)
-    float indicator_stick;            //0x021C 0 = left indicator, 0.5 = none, 1 = right
-    float indicator_state;            //0x0220 0 = left indicator, 0.5 = none, 1 = right (instant)
-    float hazard_warning_btn;         //0x0224 0 = off, 1 = on
-    float hazard_warning_state;       //0x0228 0 = off, 1 = on (instant)
-    float beacon_switch;              //0x022C 0 = off, 1 = on
-    float beacon_state;               //0x0230 0 = off, 1 = on (instant)
-    char pad_0234[8];                 //0x0234
-    float handbrake_handle;           //0x023C 0 = off, 1 = on
-    float handbrake_state;            //0x0240 0 = off, 1 = on (instant)
-    char pad_0244[8];                 //0x0244
-    float engine_brake_stick;         //0x024C 0 = off, 1 = full; steps dependant on engine data
-    float engine_brake_state;         //0x0250 0 = off, 1 = full (instant); steps dependant on engine data
-    char pad_0254[20];                //0x0254
-    float wipers_stick;               //0x0268 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
-    float wipers_state;               //0x026C 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
-
+    char pad_0010[24];                                  // 0x0000 (0x18)
+    class game_physics_vehicle_u* game_physics_vehicle; // 0x0018 (0x08)
+    class visual_interior_u* visual_interior;           // 0x0020 (0x08)
+    class game_actor_hud_u* game_actor_hud;             // 0x0028 (0x08)
+    char pad_0030[128];                                 // 0x0030 (0x80)
+    class game_trailer_actor_u* game_trailer_actor;     // 0x00B0 (0x08)
+    char pad_00B8[76];                                  // 0x00B8 (0x4c)
+    uint32_t current_camera;                            // 0x0104 (0x04) 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
+    char pad_0108[8];                                   // 0x0108 (0x08)
+    uint32_t engine_state;                              // 0x0110 (0x04) 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
+    char pad_0114[72];                                  // 0x0114 (0x48)
+    float speed_limiter;                                // 0x015C (0x04)
+    float road_speed_limit;                             // 0x0160 (0x04)
+    char pad_0164[64];                                  // 0x0164 (0x40)
+    uint16_t light_state;                               // 0x01A4 (0x02) (flags) 6 = parking, 8 = low, 7 = high, 5 = beacons
+    char pad_01A6[2];                                   // 0x01A6 (0x02)
+    uint16_t additional_illumination;                   // 0x01A8 (0x02) (flags) 3 = front, 4 = roof
+    char pad_01AA[14];                                  // 0x01AA (0x0e)
+    float wipers_intermittent_time;                     // 0x01B8 (0x04) Countdown before wipers move again when in intermittent setting
+    float wipers_position;                              // 0x01BC (0x04) 0 = down start, 1 = down end ???
+    float rpm;                                          // 0x01C0 (0x04)
+    float air_pressure;                                 // 0x01C4 (0x04)
+    float brake_pressure;                               // 0x01C8 (0x04)
+    float max_air_pressure;                             // 0x01CC (0x04)
+    char pad_01D0[8];                                   // 0x01D0 (0x08)
+    float oil_temp;                                     // 0x01D8 (0x04)
+    char pad_01DC[4];                                   // 0x01DC (0x04)
+    float water_temp;                                   // 0x01E0 (0x04)
+    char pad_01E4[4];                                   // 0x01E4 (0x04)
+    float battery_voltage;                              // 0x01E8 (0x04)
+    char pad_01EC[8];                                   // 0x01EC (0x08)
+    float turbo_pressure;                               // 0x01F4 (0x04) ?
+    char pad_01F8[12];                                  // 0x01F8 (0x0c)
+    float light_switch;                                 // 0x0204 (0x04) 0 = off, 0.5 = parking, 1 = low beam
+    float light_switch_state;                           // 0x0208 (0x04) 0 = off, 0.5 = parking, 1 = low beam (instant)
+    float high_beam_stick;                              // 0x020C (0x04) 0 = off, 1 = on
+    float high_beam_state;                              // 0x0210 (0x04) 0 = off, 1 = on (instant)
+    float light_horn_stick;                             // 0x0214 (0x04) 0 = off, 1 = on
+    float light_horn_state;                             // 0x0218 (0x04) 0 = off, 1 = on (instant)
+    float indicator_stick;                              // 0x021C (0x04) 0 = left indicator, 0.5 = none, 1 = right
+    float indicator_state;                              // 0x0220 (0x04) 0 = left indicator, 0.5 = none, 1 = right (instant)
+    float hazard_warning_btn;                           // 0x0224 (0x04) 0 = off, 1 = on
+    float hazard_warning_state;                         // 0x0228 (0x04) 0 = off, 1 = on (instant)
+    float beacon_switch;                                // 0x022C (0x04) 0 = off, 1 = on
+    float beacon_state;                                 // 0x0230 (0x04) 0 = off, 1 = on (instant)
+    char pad_0234[8];                                   // 0x0234 (0x08)
+    float handbrake_handle;                             // 0x023C (0x04) 0 = off, 1 = on
+    float handbrake_state;                              // 0x0240 (0x04) 0 = off, 1 = on (instant)
+    char pad_0244[8];                                   // 0x0244 (0x08)
+    float engine_brake_stick;                           // 0x024C (0x04) 0 = off, 1 = full; steps dependant on engine data
+    float engine_brake_state;                           // 0x0250 (0x04) 0 = off, 1 = full (instant); steps dependant on engine data
+    char pad_0254[20];                                  // 0x0254 (0x14)
+    float wipers_stick;                                 // 0x0268 (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
+    float wipers_state;                                 // 0x026C (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
 
 public:
     float get_light_switch_state() const
@@ -120,9 +117,9 @@ public:
 
 class unk_cabin_t
 {
-    char pad_0000[24];  //0x0000
-    float cabin_out;    //0x0018
-    char pad_001C[108]; //0x001C
+    char pad_0000[24];  // 0x0000 (0x18)
+    float cabin_out;    // 0x0018 (0x04)
+    char pad_001C[108]; // 0x001C (0x6c)
 
 public:
     float get_cabin_out() const
@@ -133,15 +130,15 @@ public:
 
 class sound_t
 {
-    class sound_player* sound_instance;   //0x0000
-    char pad_0008[0x28];                  //0x0008
-    uint32_t is_playing;                  //0x0030  1:playing, 4:stop? maybe?
-    uint32_t something;                   //0x0034
-    class gl* glsl;                       //0x0038
-    char pad_003c[0x18];                  //0x0040
-    class gl* glsl2;                      //0x0060
-    char* sound_event_name_with_filename; //0x0060
-    char pad_0068[0x50];                  //0x0068
+    class sound_player* sound_instance;   // 0x0000 (0x08)
+    char pad_0008[0x28];                  // 0x0008 (0x28)
+    uint32_t is_playing;                  // 0x0030 (0x04)  1:playing, 4:stop? maybe?
+    uint32_t something;                   // 0x0034 (0x04)
+    class gl* glsl;                       // 0x0038 (0x08)
+    char pad_003c[0x18];                  // 0x0040 (0x18)
+    class gl* glsl2;                      // 0x0058 (0x08)
+    char* sound_event_name_with_filename; // 0x0060 (0x08)
+    char pad_0068[0x50];                  // 0x0068 (0x50)
 
 public:
     uint32_t get_is_playing() const
@@ -157,13 +154,13 @@ public:
 
 class navigation_voice_event
 {
-    uint32_t pad_0000;               //0x0000
-    uint32_t pad_0004;               //0x0004
-    char* event_name;                //0x0008
-    uint32_t pad_0010;               //0x0010
-    uint32_t pad_0014;               //0x0014
-    class navigation* navi_instance; //0x0018
-    sound_t* sound_instance;         //0x0020
+    uint32_t pad_0000;               // 0x0000 (0x04)
+    uint32_t pad_0004;               // 0x0004 (0x04)
+    char* event_name;                // 0x0008 (0x08)
+    uint32_t pad_0010;               // 0x0010 (0x04)
+    uint32_t pad_0014;               // 0x0014 (0x04)
+    class navigation* navi_instance; // 0x0018 (0x08)
+    sound_t* sound_instance;         // 0x0020 (0x08)
 
 public:
     sound_t* get_sound_instance() const
@@ -177,25 +174,23 @@ public:
     }
 };
 
-
 class unk_interior // still need to figure out what this actually is
 {
-    char pad_0000[184]; //0x0000
-    bool interior_camera; //0x00B8 1 when camera is set to interior even when head out the window
-    bool is_camera_inside; //0x00B9 1 if camera is inside, 0 when head through window
-    char pad_00BA[2]; //0x00BA
-    float camera_rotation_in_cabin; //0x00BC 0 = head straight, left is -, right is +, maybe different for UK??
-    char pad_00C0[24]; //0x00C0
-    unk_cabin_t* unk_cabin_ptr; //0x00D8
-    vec2s_t window_state; //0x00E0 0 = closed, 1 = open
-    char pad_00E8[1648]; //0x00E8
-    navigation_voice_event* now_playing_navigation_sound; // 0x0758
-    char pad_0768[88]; //0x0768
-    navigation_voice_event** navigation_sound_events; //0x07C0
-    int64_t navigation_sound_events_count; //0x07C8
-    char pad_07D0[5152]; //0x07D0
-    bool should_have_echo; //0x1BF0
-
+    char pad_0000[184];                                   // 0x0000 (0xb8)
+    bool interior_camera;                                 // 0x00B8 (0x01) 1 when camera is set to interior even when head out the window
+    bool is_camera_inside;                                // 0x00B9 (0x01) 1 if camera is inside, 0 when head through window
+    char pad_00BA[2];                                     // 0x00BA (0x02)
+    float camera_rotation_in_cabin;                       // 0x00BC (0x04) 0 = head straight, left is -, right is +, maybe different for UK??
+    char pad_00C0[24];                                    // 0x00C0 (0x18)
+    unk_cabin_t* unk_cabin_ptr;                           // 0x00D8 (0x08)
+    vec2s_t window_state;                                 // 0x00E0 (0x08) 0 = closed, 1 = open
+    char pad_00E8[1648];                                  // 0x00E8 (0x670)
+    navigation_voice_event* now_playing_navigation_sound; // 0x0758 (0x08)
+    char pad_0768[96];                                    // 0x0760 (0x60)
+    navigation_voice_event** navigation_sound_events;     // 0x07C0 (0x08)
+    int64_t navigation_sound_events_count;                // 0x07C8 (0x08)
+    char pad_07D0[5152];                                  // 0x07D0 (0x1420)
+    bool should_have_echo;                                // 0x1BF0 (0x01)
 
 public:
     uint8_t get_has_echo() const
@@ -246,10 +241,10 @@ public:
 
 class game_ctrl_u
 {
-    char pad_0000[176];       //0x0000
-    char* current_timezone;   //0x00B0
-    char pad_00B8[4184];      //0x00B8
-    game_actor_u* game_actor; //0x1110
+    char pad_0000[176];       // 0x0000 (0xb0)
+    char* current_timezone;   // 0x00B0 (0x08)
+    char pad_00B8[4184];      // 0x00B8 (0x1058)
+    game_actor_u* game_actor; // 0x1110 (0x08)
 
 public:
     game_actor_u* get_game_actor() const
@@ -258,11 +253,10 @@ public:
     }
 };
 
-
 class economy_base_t
 {
-    unk_interior* unk_interior_parent; //0x0000
-    game_ctrl_u* game_ctrl;            //0x0008
+    unk_interior* unk_interior_parent; // 0x0000 (0x08)
+    game_ctrl_u* game_ctrl;            // 0x0008 (0x08)
 
 public:
     unk_interior* get_unk_interior_parent() const

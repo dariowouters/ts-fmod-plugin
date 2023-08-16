@@ -1,3 +1,6 @@
+## 1.48.1
+- Fixed issue with echo not working.
+
 ## 1.48
 - Updated to support 1.48
 - Support for navigation voice mods
