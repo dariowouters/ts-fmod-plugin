@@ -29,6 +29,12 @@ float hazard_warning_state = 0.0f;
 float light_horn_state = 0.0f;
 float light_stick_state = 0.0f;
 float wipers_stick_state = 0.0f;
+float last_left_window_pos = 0.f;
+float last_right_window_pos = 0.f;
+bool is_air_pressure_warning_on = true;
+bool is_window_moving = false;
+bool is_left_window_button_active = false;
+bool is_right_window_button_active = false;
 
 scs_telemetry_register_for_channel_t register_for_channel = nullptr;
 scs_telemetry_unregister_from_channel_t unregister_from_channel = nullptr;
@@ -125,6 +131,46 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                     fmod_manager_instance->set_event_state("interior/stick_wipers", true);
                     wipers_stick_state = wipers_stick;
                 }
+
+                if ((game_actor->is_left_window_moving != 0 || game_actor->is_right_window_moving != 0) &&
+                    (game_actor->left_window_moving_direction > 2 || game_actor->right_window_moving_direction > 2))
+                {
+                    is_window_moving = true;
+                    fmod_manager_instance->set_global_parameter("window_stop", 0.f);
+                    fmod_manager_instance->set_event_state("interior/window_move", true, true);
+                }
+                else if (is_window_moving)
+                {
+                    is_window_moving = false;
+                    fmod_manager_instance->set_global_parameter("window_stop", 1.0f);
+                    fmod_manager_instance->set_event_state("interior/window_move", false);
+                }
+                if ((game_actor->left_window_state == 1.f && game_actor->left_window_btn_state == 1.f) ||
+                    (game_actor->left_window_state == 0.f && game_actor->left_window_btn_state == 0.f))
+                {
+                    if (!is_left_window_button_active)
+                    {
+                        fmod_manager_instance->set_event_state("interior/window_click", true, false);
+                    }
+                    is_left_window_button_active = true;
+                }
+                else if (is_left_window_button_active)
+                {
+                    is_left_window_button_active = false;
+                }
+                if ((game_actor->right_window_state == 1.f && game_actor->right_window_btn_state == 1.f) ||
+                    (game_actor->right_window_state == 0.f && game_actor->right_window_btn_state == 0.f))
+                {
+                    if (!is_right_window_button_active)
+                    {
+                        fmod_manager_instance->set_event_state("interior/window_click", true, false);
+                    }
+                    is_right_window_button_active = true;
+                }
+                else if (is_right_window_button_active)
+                {
+                    is_right_window_button_active = false;
+                }
             }
         }
 
@@ -141,12 +187,17 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                 fmod_manager_instance->set_global_parameter(
                     "wnd_right",
                     window_pos.y);
-            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0) && interior->
+
+            if (interior->
                 get_is_camera_inside())
             {
-                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->config->windows_closed);
-                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->config->windows_closed);
-                // backward compatibility
+                auto window_volume = fmod_manager_instance->config->windows_closed;
+                if (window_volume >= 1.f)
+                {
+                    window_volume += 1;
+                }
+                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->config->windows_closed + (1 - window_volume) * window_pos.x);
+                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->config->windows_closed + (1 - window_volume) * window_pos.x); // backward compatibility
             }
             else
             {
@@ -180,7 +231,13 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
 #pragma region interior
     if (telemetry_data.brake_air_pressure_warning && telemetry_data.engine_enabled)
     {
+        is_air_pressure_warning_on = true;
         fmod_manager_instance->set_event_state("interior/air_warning", true, true);
+    }
+    else if (is_air_pressure_warning_on)
+    {
+        is_air_pressure_warning_on = false;
+        fmod_manager_instance->set_event_state("interior/air_warning", false);
     }
 
     if ((telemetry_data.light_lblinker || telemetry_data.light_rblinker) && !was_indicator_light_on)

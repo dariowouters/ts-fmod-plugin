@@ -72,6 +72,8 @@ Events:
 - interior/stick_light_horn
 - interior/stick_lights
 - interior/stick_wipers
+- interior/window_move
+- interior/window_click
 - and_then_exit_left
 - and_then_exit_right
 - and_then_go_straight

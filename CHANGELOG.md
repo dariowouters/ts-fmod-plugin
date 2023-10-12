@@ -1,3 +1,10 @@
+## 1.48.5
+- Updated to support 1.48.5
+- Fixed air pressure warning sometimes getting stuck playing
+- Added support for more interior events:
+  - interior/window_move
+  - interior/window_click
+
 ## 1.48.1
 - Fixed issue with echo not working.
 
