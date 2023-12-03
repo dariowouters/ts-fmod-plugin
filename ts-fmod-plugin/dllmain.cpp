@@ -13,6 +13,7 @@ telemetry_data_t telemetry_data;
 scs_log_t scs_log;
 
 uintptr_t base_ctrl_ptr = NULL;
+uintptr_t unk_interior_ptr = NULL;
 uint32_t game_actor_offset = 0;
 uintptr_t game_base = NULL;
 navigation_voice_event* last_played = nullptr;
@@ -174,7 +175,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             }
         }
 
-        const auto* interior = *reinterpret_cast<unk_interior**>(base_ctrl_ptr - 8);
+        const auto* interior = *reinterpret_cast<unk_interior**>(unk_interior_ptr);
 
         if (interior != nullptr)
         {
@@ -188,16 +189,12 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
                     "wnd_right",
                     window_pos.y);
 
-            if (interior->
+            if (common::cmpf(window_pos.x, 0) && common::cmpf(window_pos.y, 0) && interior->
                 get_is_camera_inside())
             {
-                auto window_volume = fmod_manager_instance->config->windows_closed;
-                if (window_volume >= 1.f)
-                {
-                    window_volume += 1;
-                }
-                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->config->windows_closed + (1 - window_volume) * window_pos.x);
-                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->config->windows_closed + (1 - window_volume) * window_pos.x); // backward compatibility
+                fmod_manager_instance->set_bus_volume("outside", fmod_manager_instance->config->windows_closed);
+                fmod_manager_instance->set_bus_volume("exterior", fmod_manager_instance->config->windows_closed);
+                // backward compatibility
             }
             else
             {
@@ -365,12 +362,24 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
     scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
 
     const auto base_ctrl_ptr_offset = pattern::scan("48 8b 05 ? ? ? ? 48 8b 4b ? 48 8b 80 ? ? ? ? 48 8b b9", game_base, image_size);
+    if (base_ctrl_ptr_offset == NULL)
+    {
+        version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find base_ctrl pointer offset");
+        return SCS_RESULT_generic_error;
+    }
     base_ctrl_ptr = base_ctrl_ptr_offset + *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 3) + 7;
-
     game_actor_offset = *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 0x0E);
 
+    const auto unk_interior_ptr_offset = pattern::scan("44 38 3b 0f 84 ? ? ? ? 8b 05 ? ? ? ? 48 8b 3d ? ? ? ? 85 c0 74", game_base, image_size);
+    if (unk_interior_ptr_offset == NULL)
+    {
+        version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find unk_interior pointer offset");
+        return SCS_RESULT_generic_error;
+    }
+    unk_interior_ptr = unk_interior_ptr_offset + *reinterpret_cast<uint32_t*>(unk_interior_ptr_offset + 0x12) + 0x16;
+
     ss.str("");
-    ss << "[ts-fmod-plugin] Found base_ctrl @ " << std::hex << (base_ctrl_ptr - game_base);
+    ss << "[ts-fmod-plugin] Found base_ctrl @ " << std::hex << (base_ctrl_ptr - game_base) << " and unk_interior @" << (unk_interior_ptr - game_base);
     scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
 
     const auto events_registered =
@@ -390,12 +399,6 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
     if (!fmod_manager_instance->init())
     {
         scs_log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Could not init fmod");
-        return SCS_RESULT_generic_error;
-    }
-
-    if (base_ctrl_ptr == NULL)
-    {
-        version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find base_ctrl pointer");
         return SCS_RESULT_generic_error;
     }
 

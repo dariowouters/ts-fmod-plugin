@@ -1,3 +1,7 @@
+## 1.49
+- Updated to support 1.49
+- Reverted window volume changes
+
 ## 1.48.5
 - Updated to support 1.48.5
 - Fixed air pressure warning sometimes getting stuck playing
