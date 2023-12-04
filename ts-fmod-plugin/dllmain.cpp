@@ -5,6 +5,9 @@
 #include "telemetry_data.h"
 #include "memory_structure.h"
 #include "memory.h"
+#include <iostream>
+#include <windows.h>
+#include <unordered_set>
 
 fmod_manager* fmod_manager_instance = nullptr;
 
@@ -36,6 +39,7 @@ bool is_air_pressure_warning_on = true;
 bool is_window_moving = false;
 bool is_left_window_button_active = false;
 bool is_right_window_button_active = false;
+bool is_focused = true;
 
 scs_telemetry_register_for_channel_t register_for_channel = nullptr;
 scs_telemetry_unregister_from_channel_t unregister_from_channel = nullptr;
@@ -59,6 +63,30 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
     fmod_manager_instance->set_event_parameter("engine/engine", "load", telemetry_data.effective_throttle);
     // The game might use some other value, but this seems close enough
     fmod_manager_instance->set_event_parameter("engine/exhaust", "load", telemetry_data.effective_throttle);
+
+    // Check If Game Lost Focus To Mute Audio
+    const int nChars = 256;
+    HWND handle;
+    char Buff[nChars];
+
+    handle = GetForegroundWindow();
+    if (GetWindowTextA(handle, Buff, nChars) > 0) {
+        std::stringstream ss;
+        ss << Buff << std::endl;
+        std::string current_window = ss.str().c_str();
+        current_window.erase(remove(current_window.begin(), current_window.end(), '\n'), current_window.end()); // for some reason it makes a new line this just removes it
+        
+        std::unordered_set<std::string> allowed_windows = { // Just the allowed windows
+    "Euro Truck Simulator 2", "Euro Truck Simulator 2 Multiplayer",
+    "American Truck Simulator", "American Truck Simulator Multiplayer"
+        };
+        
+        if ((is_focused && allowed_windows.find(current_window) == allowed_windows.end()) ||
+            (!is_focused && allowed_windows.find(current_window) != allowed_windows.end())) {
+            fmod_manager_instance->set_bus_volume("", is_focused ? 0 : fmod_manager_instance->config->master);
+            is_focused = !is_focused;
+        }
+    }
 
     if (base_ctrl_ptr != NULL)
     {
