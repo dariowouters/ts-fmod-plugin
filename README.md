@@ -10,7 +10,6 @@ Currently this uses a mix of the telemetry channels provided by the SCS sdk and 
 I'm not that great at c(++) and reverse engineering so it might just stay this way, and also with more reverse engineering making updating slower and more complicated.
 
 # Some limitations/issues
-- Will keep playing sound even when alt-tabbed.
 - Sound level/direction does not change with the camera, the sound is always as if you are in the truck looking forward, with the exception of interior sounds not being played when on an exterior camera.
 - You will need to mute or lower some of the in-game audio channels for your truck (or you will hear double audio).
 - Can (and most probably will) break and possibly crash your game with every major game update because it needs to read some values directly from memory, and this structure can change with updates.
