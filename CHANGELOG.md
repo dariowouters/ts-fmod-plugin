@@ -1,3 +1,6 @@
+## 1.50
+- Updated to support 1.50
+
 ## 1.49
 - Updated to support 1.49
 - Reverted window volume changes
