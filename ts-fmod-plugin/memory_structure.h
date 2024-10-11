@@ -87,10 +87,10 @@ public:
     char pad_0240[8];                                               // 0x0240 (0x08)
     float handbrake_handle;                                         // 0x0248 (0x04) 0 = off, 1 = on
     float handbrake_state;                                          // 0x024C (0x04) 0 = off, 1 = on (instant)
-    char pad_0250[8];                                               // 0x0250 (0x08)
-    float engine_brake_stick;                                       // 0x0258 (0x04) 0 = off, 1 = full; steps dependant on engine data
-    float engine_brake_state;                                       // 0x025C (0x04) 0 = off, 1 = full (instant); steps dependant on engine data
-    char pad_0260[28];                                              // 0x0260 (0x1c)
+    char pad_0250[16];                                              // 0x0250 (0x10)
+    float engine_brake_stick;                                       // 0x0260 (0x04) 0 = off, 1 = full; steps dependant on engine data
+    float engine_brake_state;                                       // 0x0264 (0x04) 0 = off, 1 = full (instant); steps dependant on engine data
+    char pad_0268[20];                                              // 0x0268 (0x14)
     float wipers_stick;                                             // 0x027C (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
     float wipers_state;                                             // 0x0280 (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
     char pad_0284[12];                                              // 0x0284 (0x0c)
