@@ -1,3 +1,6 @@
+## 1.52
+- Updated to support 1.52
+
 ## 1.51
 - Updated to support 1.51
 
