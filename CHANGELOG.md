@@ -1,3 +1,6 @@
+## 1.53
+- Updated to support 1.53
+
 ## 1.52
 - Updated to support 1.52
 

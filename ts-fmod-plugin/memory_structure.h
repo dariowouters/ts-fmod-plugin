@@ -31,19 +31,19 @@ public:
 
 static_assert(sizeof(unit_t) == 0x10);
 
-class game_actor_u : public unit_t // Size: 0x10A8
+class game_actor_u : public unit_t // Size: 0x10D8
 {
 public:
     char pad_0010[8]; //0x0010 (0x08)
     class game_physics_vehicle_u* game_physics_vehicle; //0x0018 (0x08)
     class visual_interior_u* visual_interior; //0x0020 (0x08)
     class game_actor_hud_u* game_actor_hud; //0x0028 (0x08)
-    char pad_0030[88]; //0x0030 (0x58)
-    class history_stream_set_u* history_stream_set; //0x0088 (0x08)
-    char pad_0090[24]; //0x0090 (0x18)
-    class history_manager_u* history_manager; //0x00A8 (0x08)
-    class game_trailer_actor_u* game_trailer_actor; //0x00B0 (0x08)
-    char pad_00B8[96]; //0x00B8 (0x60)
+    char pad_0030[104]; //0x0030 (0x68)
+    class history_stream_set_u* history_stream_set; //0x0098 (0x08)
+    char pad_00A0[16]; //0x00A0 (0x10)
+    class history_manager_u* history_manager; //0x00B0 (0x08)
+    class game_trailer_actor_u* game_trailer_actor; //0x00B8 (0x08)
+    char pad_00C0[88]; //0x00C0 (0x58)
     uint32_t current_camera; //0x0118 (0x04) 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
     char pad_011C[8]; //0x011C (0x08)
     uint32_t engine_state; //0x0124 (0x04) 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
@@ -118,9 +118,10 @@ public:
     class physics_gearbox_direct_u* physics_gearbox_direct; //0x0AD0 (0x08)
     char pad_0AD8[8]; //0x0AD8 (0x08)
     class accessory_head_lights_data_u* accessory_head_lights_data; //0x0AE0 (0x08)
-    char pad_0AE8[1184]; //0x0AE8 (0x4a0)
-    token_t N00002CB4; //0x0F88 (0x08)
-    char pad_0F90[280]; //0x0F90 (0x118)
+    char pad_0AE8[1232]; //0x0AE8 (0x4d0)
+    token_t N00002CB4; //0x0FB8 (0x08)
+    char pad_0FC0[280]; //0x0FC0 (0x118)
+
 
 public:
     float get_light_switch_state() const
@@ -164,7 +165,7 @@ public:
     }
 };
 
-static_assert(sizeof(game_actor_u) == 0x10A8);
+static_assert(sizeof(game_actor_u) == 0x10D8);
 
 class sound_t
 {
