@@ -178,6 +178,10 @@
     <ClInclude Include="memory_structure.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="prism\collections\array.h" />
+    <ClInclude Include="prism\collections\array_dyn.h" />
+    <ClInclude Include="prism\collections\list_dyn.h" />
+    <ClInclude Include="prism\string.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sdk_stores.h" />
     <ClInclude Include="telemetry_data.h" />

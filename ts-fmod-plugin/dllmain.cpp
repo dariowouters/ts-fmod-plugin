@@ -175,7 +175,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             }
         }
 
-        const auto* interior = *reinterpret_cast<unk_interior**>(unk_interior_ptr);
+        const auto* interior = *reinterpret_cast<sound_library_t**>(unk_interior_ptr);
 
         if (interior != nullptr)
         {
