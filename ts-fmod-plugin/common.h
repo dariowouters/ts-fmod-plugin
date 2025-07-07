@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 
 namespace common
 {
-    inline const char* plugin_version = "1.54";
-    constexpr uint32_t supported_game_version = 54;
+    inline const char* plugin_version = "1.55";
+    constexpr uint32_t supported_game_version = 55;
 
     inline FMOD_GUID get_guid(const std::string& s_guid)
     {

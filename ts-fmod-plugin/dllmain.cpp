@@ -13,10 +13,10 @@ telemetry_data_t telemetry_data;
 scs_log_t scs_log;
 
 uintptr_t base_ctrl_ptr = NULL;
-uintptr_t unk_interior_ptr = NULL;
+uintptr_t sound_system_ptr = NULL;
 uint32_t game_actor_offset = 0;
 uintptr_t game_base = NULL;
-navigation_voice_event* last_played = nullptr;
+voice_navigation_sound_t* last_played = nullptr;
 DWORD image_size = 0;
 
 uint32_t stored_engine_state = 0;
@@ -175,7 +175,7 @@ SCSAPI_VOID telemetry_tick(const scs_event_t event, const void* const event_info
             }
         }
 
-        const auto* interior = *reinterpret_cast<sound_library_t**>(unk_interior_ptr);
+        const auto* interior = *reinterpret_cast<sound_library_t**>(sound_system_ptr);
 
         if (interior != nullptr)
         {
@@ -361,25 +361,25 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
         "] Searching for memory offsets... If this is one of the last messages in the log after a crash, try disabling this plugin.";
     scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
 
-    const auto base_ctrl_ptr_offset = pattern::scan("48 8b 05 ? ? ? ? 48 8b 4b ? 48 8b 80 ? ? ? ? 48 8b b9", game_base, image_size);
+    const auto base_ctrl_ptr_offset = pattern::scan("48 8b 05 ? ? ? ? 48 8b ? 48 8b 49 ? 48 8b 80", game_base, image_size);
     if (base_ctrl_ptr_offset == NULL)
     {
         version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find base_ctrl pointer offset");
         return SCS_RESULT_generic_error;
     }
     base_ctrl_ptr = base_ctrl_ptr_offset + *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 3) + 7;
-    game_actor_offset = *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 0x0E);
+    game_actor_offset = *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 0x11);
 
-    const auto unk_interior_ptr_offset = pattern::scan("44 38 3b 0f 84 ? ? ? ? 8b 05 ? ? ? ? 48 8b 3d ? ? ? ? 85 c0 74", game_base, image_size);
-    if (unk_interior_ptr_offset == NULL)
+    const auto sound_system_ptr_offset = pattern::scan("44 38 3b 0f 84 ? ? ? ? 8b 05 ? ? ? ? 48 8b 3d ? ? ? ? 85 c0 74", game_base, image_size);
+    if (sound_system_ptr_offset == NULL)
     {
-        version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find unk_interior pointer offset");
+        version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find sound_system pointer offset");
         return SCS_RESULT_generic_error;
     }
-    unk_interior_ptr = unk_interior_ptr_offset + *reinterpret_cast<uint32_t*>(unk_interior_ptr_offset + 0x12) + 0x16;
+    sound_system_ptr = sound_system_ptr_offset + *reinterpret_cast<uint32_t*>(sound_system_ptr_offset + 0x12) + 0x16;
 
     ss.str("");
-    ss << "[ts-fmod-plugin] Found base_ctrl @ " << std::hex << (base_ctrl_ptr - game_base) << " and unk_interior @" << (unk_interior_ptr - game_base);
+    ss << "[ts-fmod-plugin] Found base_ctrl @ " << std::hex << (base_ctrl_ptr - game_base) << " and sound_system @ " << (sound_system_ptr - game_base);
     scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
 
     const auto events_registered =

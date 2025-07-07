@@ -2,6 +2,7 @@
 
 #include "prism/collections/array_dyn.h"
 #include "prism/collections/list_dyn.h"
+#include "prism/collections/array_local.h"
 #include "prism/string.h"
 
 using namespace ts_fmod_plugin::prism;
@@ -194,45 +195,26 @@ public:
 };
 static_assert( sizeof( game_actor_u ) == 0x21E8 );
 
-class sound_t
+// Size: 0x0010
+class sound_event_t
 {
-    class sound_player* sound_instance;   // 0x0000 (0x08)
-    char pad_0008[0x28];                  // 0x0008 (0x28)
-    uint32_t is_playing;                  // 0x0030 (0x04)  1:playing, 4:stop? maybe?
-    uint32_t something;                   // 0x0034 (0x04)
-    class gl* glsl;                       // 0x0038 (0x08)
-    char pad_003c[0x18];                  // 0x0040 (0x18)
-    class gl* glsl2;                      // 0x0058 (0x08)
-    char* sound_event_name_with_filename; // 0x0060 (0x08)
-    char pad_0068[0x50];                  // 0x0068 (0x50)
-
 public:
-    uint32_t get_is_playing() const
-    {
-        return is_playing;
-    }
+    class fmod_event_t* fmod_sound_event; // 0x0008 (0x08)
 
-    const char* get_sound_event_name_with_file_name() const
-    {
-        return sound_event_name_with_filename;
-    }
+    virtual void destructor();
 };
+static_assert(sizeof(sound_event_t) == 0x10);
 
-class navigation_voice_event
+class voice_navigation_sound_t
 {
-    uint32_t pad_0000;               // 0x0000 (0x04)
-    uint32_t pad_0004;               // 0x0004 (0x04)
-    char* event_name;                // 0x0008 (0x08)
-    uint32_t pad_0010;               // 0x0010 (0x04)
-    uint32_t pad_0014;               // 0x0014 (0x04)
-    class navigation* navi_instance; // 0x0018 (0x08)
-    sound_t* sound_instance;         // 0x0020 (0x08)
+    uint32_t pad_0000;   // 0x0000 (0x04)
+    uint32_t pad_0004;   // 0x0004 (0x04)
+    char* event_name;    // 0x0008 (0x08)
+    uint32_t pad_0010;   // 0x0010 (0x04)
+    uint32_t pad_0014;   // 0x0014 (0x04)
+    sound_event_t event; // 0x0018 (0x10)
 
 public:
-    sound_t* get_sound_instance() const
-    {
-        return sound_instance;
-    }
 
     const char* get_event_name() const
     {
@@ -240,53 +222,78 @@ public:
     }
 };
 
-class sound_library_t // Size: 0x1F58
+namespace sound
+{
+    // Size: 0x0008
+    class sound_owner_t
+    {
+    public:
+        virtual void destructor();
+    };
+    static_assert( sizeof( sound_owner_t ) == 0x8 );
+
+    // Size: 0x0008
+    class sound_base_t : public /* [0x08] @ 0x00 */ sound_owner_t
+    {
+    public:
+    };
+    static_assert( sizeof( sound_base_t ) == 0x8 );
+
+    // Size: 0x0010
+    class sound_stream_t : public /* [0x08] @ 0x00 */ sound_base_t
+    {
+    public:
+        class fmod_stream_t* stream; // 0x0008 (0x08)
+    };
+    static_assert( sizeof( sound_stream_t ) == 0x10 );
+}
+
+// Size: 0x1F60
+class sound_library_t
 {
 public:
     char pad_0008[ 8 ]; // 0x0008 (0x08)
-    class array_dyn_t< class sound_event_t* > ui_sound_events; // 0x0010 (0x20) local 27
-    char pad_0030[ 228 ]; // 0x0030 (0xe4)
-    uint32_t state; // 0x0114 (0x04) 1 = on; 2 = off
-    bool interior_camera; // 0x0118 (0x01) 1 when camera is set to interior even when head out the window
-    bool is_camera_inside; // 0x0119 (0x01) 1 if camera is inside, 0 when head through window
-    char pad_011A[ 2 ]; // 0x011A (0x02)
-    float camera_rotation_in_cabin; // 0x011C (0x04) 0 = head straight, left is -, right is +, maybe different for UK??
-    float cabin_out; // 0x0120 (0x04)
-    char pad_0124[ 4 ]; // 0x0124 (0x04)
-    class fmod_parameter_t* cabin_type_param; // 0x0128 (0x08)
-    class fmod_parameter_t* cabin_rot_param; // 0x0130 (0x08)
-    class fmod_parameter_t* cabin_out_param; // 0x0138 (0x08)
-    vec2s_t window_state; // 0x0140 (0x08) 0 = closed, 1 = open
-    class fmod_parameter_t* wnd_left_param; // 0x0148 (0x08)
-    class fmod_parameter_t* wnd_right_param; // 0x0150 (0x08)
-    float daytime; // 0x0158 (0x04)
-    char pad_015C[ 4 ]; // 0x015C (0x04)
-    class fmod_parameter_t* daytime_param; // 0x0160 (0x08)
-    char pad_0168[ 48 ]; // 0x0168 (0x30)
-    class array_dyn_t< class voice_navigation_sound_t > navigation_sounds; // 0x0198 (0x20) local 38
-    char pad_01B8[ 1520 ]; // 0x01B8 (0x5f0)
-    class string_dyn_t current_navigation_bank_path; // 0x07A8 (0x18)
-    navigation_voice_event* now_playing_navigation_sound; // 0x07C0 (0x08)
-    class list_dyn_t< class voice_navigation_sound_t* > N0000433C; // 0x07C8 (0x38)
-    class array_dyn_t< class allocator_node_t* > N00004654; // 0x0800 (0x20)
-    class array_dyn_t< class voice_navigation_sound_t* > navigation_sound_events; // 0x0820 (0x20)
-    char pad_0840[ 5144 ]; // 0x0840 (0x1418)
-    bool should_have_echo; // 0x1C58 (0x01)
-    char pad_1C59[ 223 ]; // 0x1C59 (0xdf)
-    class array_dyn_t< class sound_event_t* > N000045E9; // 0x1D38 (0x20) local 20
-    char pad_1D58[ 168 ]; // 0x1D58 (0xa8)
-    class array_dyn_t< class sound_stream_t > N00004602; // 0x1E00 (0x20) local 1
-    char pad_1E20[ 16 ]; // 0x1E20 (0x10)
-    class array_dyn_t<bool> N00004605; // 0x1E30 (0x20) local 1
-    char pad_1E50[ 56 ]; // 0x1E50 (0x38)
-    class array_dyn_t< class cbradio_beep_item_t* > N00004610; // 0x1E88 (0x20)
-    token_t gps_voice; // 0x1EA8 (0x08)
-    char pad_1EB0[ 8 ]; // 0x1EB0 (0x08)
-    class array_dyn_t< string_dyn_t > ambient_sounds; // 0x1EB8 (0x20) local 3
-    char pad_1ED8[ 72 ]; // 0x1ED8 (0x48)
-    class string_dyn_t current_reverb; // 0x1F20 (0x18)
-    class string_dyn_t N00004627; // 0x1F38 (0x18)
-    char pad_1F50[ 8 ]; // 0x1F50 (0x08)
+    array_local_t< class sound_event_t*, 28ul > ui_sound_events; // 0x0010 (0x100)
+    char pad_0110[ 12 ]; // 0x0110 (0x0c)
+    uint32_t state; // 0x011C (0x04) 1 = on; 2 = off
+    bool interior_camera; // 0x0120 (0x01)
+    bool is_camera_inside; // 0x0121 (0x01)
+    char pad_0122[ 2 ]; // 0x0122 (0x02)
+    float camera_rotation_in_cabin; // 0x0124 (0x04)
+    float cabin_out; // 0x0128 (0x04)
+    char pad_012C[ 4 ]; // 0x012C (0x04)
+    class fmod_parameter_t* cabin_type_param; // 0x0130 (0x08)
+    class fmod_parameter_t* cabin_rot_param; // 0x0138 (0x08)
+    class fmod_parameter_t* cabin_out_param; // 0x0140 (0x08)
+    vec2s_t window_state; // 0x0148 (0x08)
+    class fmod_parameter_t* wnd_left_param; // 0x0150 (0x08)
+    class fmod_parameter_t* wnd_right_param; // 0x0158 (0x08)
+    float daytime; // 0x0160 (0x04)
+    char pad_0164[ 4 ]; // 0x0164 (0x04)
+    class fmod_parameter_t* daytime_param; // 0x0168 (0x08)
+    char pad_0170[ 48 ]; // 0x0170 (0x30)
+    array_local_t< voice_navigation_sound_t, 38ul > navigation_sounds; // 0x01A0 (0x610)
+    string_dyn_t current_navigation_bank_path; // 0x07B0 (0x18)
+    voice_navigation_sound_t* now_playing_navigation_sound; // 0x07C8 (0x08)
+    list_dyn_t< class voice_navigation_sound_t* > N0000433C; // 0x07D0 (0x58)
+    array_dyn_t< class voice_navigation_sound_t* > navigation_sound_events; // 0x0828 (0x20)
+    char pad_0848[ 5144 ]; // 0x0848 (0x1418)
+    bool should_have_echo; // 0x1C60 (0x01)
+    char pad_1C61[ 223 ]; // 0x1C61 (0xdf)
+    array_local_t< class sound_event_t*, 20ul > N0000D549; // 0x1D40 (0xc0)
+    char pad_1E00[ 8 ]; // 0x1E00 (0x08)
+    array_local_t< sound::sound_stream_t, 1ul > N0000D565; // 0x1E08 (0x30)
+    array_local_t< bool, 1ul > N0001ADE2; // 0x1E38 (0x21)
+    char pad_1E59[ 7 ]; // 0x1E59 (0x07)
+    sound_event_t cb_radio_start; // 0x1E60 (0x10)
+    sound_event_t cb_radio_stop; // 0x1E70 (0x10)
+    sound_event_t cb_radio_noise; // 0x1E80 (0x10)
+    array_dyn_t< class cbradio_beep_item_t* > N0000D574; // 0x1E90 (0x20)
+    char pad_1EB0[ 16 ]; // 0x1EB0 (0x10)
+    array_local_t< string_dyn_t, 3ul > ambient_sounds; // 0x1EC0 (0x68)
+    string_dyn_t current_reverb; // 0x1F28 (0x18)
+    string_dyn_t current_ambient_sfx; // 0x1F40 (0x18)
+    char pad_1F58[ 8 ]; // 0x1F58 (0x08)
 
     virtual void destructor();
 
@@ -321,10 +328,11 @@ public:
         return cabin_out;
     }
 
-    navigation_voice_event* get_now_playing_navigation_sound() const
+    voice_navigation_sound_t* get_now_playing_navigation_sound() const
     {
         return now_playing_navigation_sound;
     }
 };
-static_assert(sizeof(sound_library_t) == 0x1F58);
+static_assert( sizeof( sound_library_t ) == 0x1F60 );
+
 #pragma pack( pop )

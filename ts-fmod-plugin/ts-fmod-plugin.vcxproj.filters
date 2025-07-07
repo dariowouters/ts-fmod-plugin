@@ -56,6 +56,9 @@
     <ClInclude Include="prism\string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="prism\collections\array_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

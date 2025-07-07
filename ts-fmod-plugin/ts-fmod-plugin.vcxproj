@@ -180,6 +180,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="prism\collections\array.h" />
     <ClInclude Include="prism\collections\array_dyn.h" />
+    <ClInclude Include="prism\collections\array_local.h" />
     <ClInclude Include="prism\collections\list_dyn.h" />
     <ClInclude Include="prism\string.h" />
     <ClInclude Include="resource.h" />
