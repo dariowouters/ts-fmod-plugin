@@ -59,127 +59,134 @@ public:
 static_assert( sizeof( placement_t ) == 0x20 );
 
 
-// Size: 0x23D8
-class game_actor_u : public /* [0x10] @ 0x00 */ unit_t
+// Size: W|L|A 0x1EBC0
+class game_actor_u : public /* [W|L|A 0x10] @ W|L|A 0x00 */ unit_t
 {
 public:
-    char pad_0010[ 8 ]; // 0x0010 (0x08)
-    class game_physics_vehicle_u *game_physics_vehicle; // 0x0018 (0x08)
-    class visual_interior_u* visual_interior;           // 0x0020 (0x08)
-    class N0000F213* N0000F1FD;                         // 0x0028 (0x08)
-    class game_actor_hud_u* game_actor_hud;             // 0x0030 (0x08)
-    char pad_0038[ 24 ]; // 0x0038 (0x18)
-    bool stored_show_weigh; // 0x0050 (0x01)
-    bool stored_need_to_weigh; // 0x0051 (0x01)
-    char pad_0052[ 86 ]; // 0x0052 (0x56)
-    class history_stream_set_u* history_stream_set; // 0x00A8 (0x08)
-    char pad_00B0[ 16 ]; // 0x00B0 (0x10)
-    class history_manager_u* history_manager;       // 0x00C0 (0x08)
-    class game_trailer_actor_u* game_trailer_actor; // 0x00C8 (0x08)
-    char pad_00D0[ 116 ]; // 0x00D0 (0x74)
-    uint32_t current_camera; // 0x0144 (0x04) 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
-    char pad_0148[ 8 ]; // 0x0148 (0x08)
-    uint32_t engine_state; // 0x0150 (0x04) 0 = engine off, 1 = starting, 2 = running, 3 = shutting down
-    bool ignition; // 0x0154 (0x01)
-    char pad_0155[ 7 ]; // 0x0155 (0x07)
-    bool parking_brake; // 0x015C (0x01)
-    char pad_015D[ 9 ]; // 0x015D (0x09)
-    bool engine_brake_enabled; // 0x0166 (0x01)
-    char pad_0167[ 25 ]; // 0x0167 (0x19)
-    uint32_t retarder_i_level; // 0x0180 (0x04)
-    float retarder_f_level; // 0x0184 (0x04)
-    char pad_0188[ 4 ]; // 0x0188 (0x04)
-    bool diff_locked; // 0x018C (0x01)
-    char pad_018D[ 12 ]; // 0x018D (0x0c)
-    bool cruise_control_enabled; // 0x0199 (0x01)
-    char pad_019A[ 2 ]; // 0x019A (0x02)
-    float cruise_control_speed; // 0x019C (0x04)
-    char pad_01A0[ 32 ]; // 0x01A0 (0x20)
-    uint32_t wiper_setting; // 0x01C0 (0x04)
-    char pad_01C4[ 24 ]; // 0x01C4 (0x18)
-    uint16_t flags; // 0x01DC (0x02) 6 = parking lights, 8 = low beam, 7 = high beam, 5 = beacons, 0 = truck axle lifted, 1 = trailer axle lifted
-    char pad_01DE[ 2 ]; // 0x01DE (0x02)
-    uint16_t additional_illumination; // 0x01E0 (0x02) (flags) 3 = front, 4 = roof
-    char pad_01E2[ 14 ]; // 0x01E2 (0x0e)
-    float wipers_intermittent_time; // 0x01F0 (0x04)
-    float wipers_position; // 0x01F4 (0x04)
-    char pad_01F8[ 8 ]; // 0x01F8 (0x08)
-    array_local_t<  float, 7ul > N0000F539; // 0x0200 (0x3c)
-    char pad_023C[ 4 ]; // 0x023C (0x04)
-    array_local_t<  float, 7ul > N0000F541; // 0x0240 (0x3c)
-    char pad_027C[ 4 ]; // 0x027C (0x04)
-    array_local_t<  float, 3ul > N0000F549; // 0x0280 (0x2c)
-    char pad_02AC[ 4 ]; // 0x02AC (0x04)
-    array_local_t<  float, 3ul > N0000F54F; // 0x02B0 (0x2c)
-    char pad_02DC[ 8 ]; // 0x02DC (0x08)
-    float rpm; // 0x02E4 (0x04)
-    float air_pressure; // 0x02E8 (0x04)
-    float brake_pressure; // 0x02EC (0x04)
-    float max_air_pressure; // 0x02F0 (0x04)
-    char pad_02F4[ 8 ]; // 0x02F4 (0x08)
-    float oil_temp; // 0x02FC (0x04)
-    char pad_0300[ 4 ]; // 0x0300 (0x04)
-    float water_temp; // 0x0304 (0x04)
-    char pad_0308[ 4 ]; // 0x0308 (0x04)
-    float battery_voltage; // 0x030C (0x04)
-    char pad_0310[ 8 ]; // 0x0310 (0x08)
-    float turbo_pressure; // 0x0318 (0x04)
-    char pad_031C[ 16 ]; // 0x031C (0x10)
-    float light_switch; // 0x032C (0x04) 0 = off, 0.5 = parking, 1 = low beam
-    float light_switch_state; // 0x0330 (0x04) 0 = off, 0.5 = parking, 1 = low beam (instant)
-    float high_beam_stick; // 0x0334 (0x04) 0 = off, 1 = on
-    float high_beam_state; // 0x0338 (0x04) 0 = off, 1 = on (instant)
-    float light_horn_stick; // 0x033C (0x04) 0 = off, 1 = on
-    float light_horn_state; // 0x0340 (0x04) 0 = off, 1 = on (instant)
-    float indicator_stick; // 0x0344 (0x04) 0 = left indicator, 0.5 = none, 1 = right
-    float indicator_state; // 0x0348 (0x04) 0 = left indicator, 0.5 = none, 1 = right (instant)
-    float hazard_warning_btn; // 0x034C (0x04) 0 = off, 1 = on
-    float hazard_warning_state; // 0x0350 (0x04) 0 = off, 1 = on (instant)
-    float beacon_switch; // 0x0354 (0x04) 0 = off, 1 = on
-    float beacon_state; // 0x0358 (0x04) 0 = off, 1 = on (instant)
-    char pad_035C[ 8 ]; // 0x035C (0x08)
-    float handbrake_handle; // 0x0364 (0x04) 0 = off, 1 = on
-    float handbrake_state; // 0x0368 (0x04) 0 = off, 1 = on (instant)
-    char pad_036C[ 24 ]; // 0x036C (0x18)
-    float engine_brake_stick; // 0x0384 (0x04) 0 = off, 1 = full; steps dependant on engine data
-    float engine_brake_state; // 0x0388 (0x04) 0 = off, 1 = full (instant); steps dependant on engine data
-    char pad_038C[ 20 ]; // 0x038C (0x14)
-    float wipers_stick; // 0x03A0 (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
-    float wipers_state; // 0x03A4 (0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
-    char pad_03A8[ 20 ]; // 0x03A8 (0x14)
-    uint8_t left_window_moving_direction; // 0x03BC (0x01) 1 = got to end down; 2 = got to end up; 16 = down; 32 = up
-    uint8_t is_left_window_moving; // 0x03BD (0x01) 1 = down auto; 16 = down holding btn; 2 = auto up; 32 = up holding button
-    char pad_03BE[ 2 ]; // 0x03BE (0x02)
-    float left_window_state; // 0x03C0 (0x04) 0 = up; 1 = down
-    float left_window_btn; // 0x03C4 (0x04) 0 = up; 0.5 off; 1 = down
-    float left_window_btn_state; // 0x03C8 (0x04) 0 = up; 0.5 off; 1 = down (instant)
-    char pad_03CC[ 8 ]; // 0x03CC (0x08)
-    uint8_t right_window_moving_direction; // 0x03D4 (0x01) 1 = got to end down; 2 = got to end up; 16 = down; 32 = up
-    uint8_t is_right_window_moving; // 0x03D5 (0x01) 1 = down auto; 16 = down holding btn; 2 = auto up; 32 = up holding button
-    char pad_03D6[ 2 ]; // 0x03D6 (0x02)
-    float right_window_state; // 0x03D8 (0x04) 0 = up; 1 = down
-    float right_window_btn; // 0x03DC (0x04) 0 = up; 0.5 off; 1 = down
-    float right_window_btn_state; // 0x03E0 (0x04) 0 = up; 0.5 off; 1 = down (instant)
-    char pad_03E4[ 6288 ]; // 0x03E4 (0x1890)
-    float rpm2; // 0x1C74 (0x04)
-    float some_throttle; // 0x1C78 (0x04) or something like it
-    char pad_1C7C[ 12 ]; // 0x1C7C (0x0c)
-    float throttle_input; // 0x1C88 (0x04) truck.input.throttle
-    float brake_input; // 0x1C8C (0x04) truck.input.brake
-    float clutch_input; // 0x1C90 (0x04) truck.input.clutch
-    char pad_1C94[ 4 ]; // 0x1C94 (0x04)
-    float steering_input; // 0x1C98 (0x04)
-    char pad_1C9C[ 48 ]; // 0x1C9C (0x30)
-    placement_t placement; // 0x1CCC (0x20)
-    char pad_1CEC[ 12 ]; // 0x1CEC (0x0c)
-    class model_object_u* driver_model;                       // 0x1CF8 (0x08)
-    char pad_1D00[ 24 ]; // 0x1D00 (0x18)
-    class physics_gearbox_sequential_u* physics_gearbox_sequential; // 0x1D18 (0x08)
-    class physics_gearbox_automatic_u* physics_gearbox_automatic;   // 0x1D20 (0x08)
-    class physics_gearbox_direct_u* physics_gearbox_direct;         // 0x1D28 (0x08)
-    char pad_1D30[ 8 ]; // 0x1D30 (0x08)
-    class accessory_head_lights_data_u* accessory_head_lights_data; // 0x1D38 (0x08)
-    char pad_1D40[ 1688 ]; // 0x1D40 (0x698)
+    char pad_WLA_0x0010[ 8 ];                           // W|L|A 0x0010 (W|L|A 0x08)
+    class game_physics_vehicle_u* game_physics_vehicle; // W|L|A 0x0018 (W|L|A 0x08)
+    class visual_interior_u* visual_interior;           // W|L|A 0x0020 (W|L|A 0x08)
+    char pad_WLA_0x0028[ 8 ];                           // W|L|A 0x0028 (W|L|A 0x08)
+    class game_actor_hud_u* game_actor_hud;             // W|L|A 0x0030 (W|L|A 0x08)
+    char pad_WLA_0x0038[ 112 ];                         // W|L|A 0x0038 (W|L|A 0x70)
+    class history_stream_set_u* history_stream_set_u;   // W|L|A 0x00A8 (W|L|A 0x08)
+    char pad_WLA_0x00B0[ 16 ];                          // W|L|A 0x00B0 (W|L|A 0x10)
+    class history_manager_u* history_manager_u;         // W|L|A 0x00C0 (W|L|A 0x08)
+    class game_trailer_actor_u* game_trailer_actor;     // W|L|A 0x00C8 (W|L|A 0x08)
+    char pad_WLA_0x00D0[ 116 ];                         // W|L|A 0x00D0 (W|L|A 0x74)
+    uint32_t current_camera;     // W|L|A 0x0144 (W|L|A 0x04) 2 = int, 1 = chase, 7 = top, 5 = roof, 4 = side_back, 3 = hood, 6 = side_front, 9 = cinematic, 0 = dev
+    char pad_WLA_0x0148[ 8 ];    // W|L|A 0x0148 (W|L|A 0x08)
+    uint32_t engine_state;       // W|L|A 0x0150 (W|L|A 0x04)
+    bool ignition;               // W|L|A 0x0154 (W|L|A 0x01)
+    char pad_WLA_0x0155[ 7 ];    // W|L|A 0x0155 (W|L|A 0x07)
+    bool parking_brake;          // W|L|A 0x015C (W|L|A 0x01)
+    char pad_WLA_0x015D[ 9 ];    // W|L|A 0x015D (W|L|A 0x09)
+    bool engine_brake_enabled;   // W|L|A 0x0166 (W|L|A 0x01)
+    char pad_WLA_0x0167[ 25 ];   // W|L|A 0x0167 (W|L|A 0x19)
+    uint32_t retarder_i_level;   // W|L|A 0x0180 (W|L|A 0x04)
+    float retarder_f_level;      // W|L|A 0x0184 (W|L|A 0x04)
+    char pad_WLA_0x0188[ 4 ];    // W|L|A 0x0188 (W|L|A 0x04)
+    bool diff_locked;            // W|L|A 0x018C (W|L|A 0x01)
+    char pad_WLA_0x018D[ 12 ];   // W|L|A 0x018D (W|L|A 0x0c)
+    bool cruise_control_enabled; // W|L|A 0x0199 (W|L|A 0x01)
+    char pad_WLA_0x019A[ 2 ];    // W|L|A 0x019A (W|L|A 0x02)
+    float cruise_control_speed;  // W|L|A 0x019C (W|L|A 0x04)
+    char pad_WLA_0x01A0[ 32 ];   // W|L|A 0x01A0 (W|L|A 0x20)
+    uint32_t wiper_setting;      // W|L|A 0x01C0 (W|L|A 0x04)
+    char pad_WLA_0x01C4[ 12 ];   // W|L|A 0x01C4 (W|L|A 0x0c)
+    uint16_t flags; // W|L|A 0x01D0 (W|L|A 0x02) 6 = parking lights, 8 = low beam, 7 = high beam, 5 = beacons, 0 = truck axle lifted, 1 = trailer axle lifted
+    char pad_WLA_0x01D2[ 4 ];            // W|L|A 0x01D2 (W|L|A 0x04)
+    uint16_t additional_illumination;    // W|L|A 0x01D6 (W|L|A 0x02) (flags) 3 = front, 4 = roof
+    char pad_WLA_0x01D8[ 12 ];           // W|L|A 0x01D8 (W|L|A 0x0c)
+    float wipers_intermittent_time;      // W|L|A 0x01E4 (W|L|A 0x04)
+    float wipers_position;               // W|L|A 0x01E8 (W|L|A 0x04)
+    char pad_WLA_0x01EC[ 4 ];            // W|L|A 0x01EC (W|L|A 0x04)
+    array_local_t< float, 7 > N0000956F; // W|L|A 0x01F0 (W|L|A 0x3c)
+    char pad_WLA_0x022C[ 4 ];            // W|L|A 0x022C (W|L|A 0x04)
+    array_local_t< float, 7 > N00009577; // W|L|A 0x0230 (W|L|A 0x3c)
+    char pad_WLA_0x026C[ 4 ];            // W|L|A 0x026C (W|L|A 0x04)
+    array_local_t< float, 3 > N0000957F; // W|L|A 0x0270 (W|L|A 0x2c)
+    char pad_WLA_0x029C[ 4 ];            // W|L|A 0x029C (W|L|A 0x04)
+    array_local_t< float, 3 > N00009585; // W|L|A 0x02A0 (W|L|A 0x2c)
+    char pad_WLA_0x02CC[ 8 ];            // W|L|A 0x02CC (W|L|A 0x08)
+    float rpm;                           // W|L|A 0x02D4 (W|L|A 0x04)
+    float air_pressure;                  // W|L|A 0x02D8 (W|L|A 0x04)
+    float brake_pressure;                // W|L|A 0x02DC (W|L|A 0x04)
+    float max_air_pressure;              // W|L|A 0x02E0 (W|L|A 0x04)
+    char pad_WLA_0x02E4[ 8 ];            // W|L|A 0x02E4 (W|L|A 0x08)
+    float oil_temp;                      // W|L|A 0x02EC (W|L|A 0x04)
+    char pad_WLA_0x02F0[ 4 ];            // W|L|A 0x02F0 (W|L|A 0x04)
+    float water_temp;                    // W|L|A 0x02F4 (W|L|A 0x04)
+    char pad_WLA_0x02F8[ 4 ];            // W|L|A 0x02F8 (W|L|A 0x04)
+    float battery_voltage;               // W|L|A 0x02FC (W|L|A 0x04)
+    char pad_WLA_0x0300[ 8 ];            // W|L|A 0x0300 (W|L|A 0x08)
+    float turbo_pressure;                // W|L|A 0x0308 (W|L|A 0x04)
+    char pad_WLA_0x030C[ 16 ];           // W|L|A 0x030C (W|L|A 0x10)
+    float light_switch;                  // W|L|A 0x031C (W|L|A 0x04) 0 = off, 0.5 = parking, 1 = low beam
+    float light_switch_state;            // W|L|A 0x0320 (W|L|A 0x04) 0 = off, 0.5 = parking, 1 = low beam (instant)
+    float high_beam_stick;               // W|L|A 0x0324 (W|L|A 0x04) 0 = off, 1 = on
+    float high_beam_state;               // W|L|A 0x0328 (W|L|A 0x04)
+    float light_horn_stick;              // W|L|A 0x032C (W|L|A 0x04) 0 = off, 1 = on
+    float light_horn_state;              // W|L|A 0x0330 (W|L|A 0x04) 0 = off, 1 = on (instant)
+    float indicator_stick;               // W|L|A 0x0334 (W|L|A 0x04) 0 = left indicator, 0.5 = none, 1 = right
+    float indicator_state;      // W|L|A 0x0338 (W|L|A 0x04) 0 = left indicator, 0.5 = none, 1 = right (instant)
+    float hazard_warning_btn;   // W|L|A 0x033C (W|L|A 0x04) 0 = off, 1 = on (instant)
+    float hazard_warning_state; // W|L|A 0x0340 (W|L|A 0x04) 0 = off, 1 = on
+    float beacon_switch;        // W|L|A 0x0344 (W|L|A 0x04) 0 = off, 1 = on (instant)
+    float beacon_state;         // W|L|A 0x0348 (W|L|A 0x04) 0 = off, 1 = on
+    char pad_WLA_0x034C[ 8 ];   // W|L|A 0x034C (W|L|A 0x08)
+    float handbrake_handle;     // W|L|A 0x0354 (W|L|A 0x04) 0 = off, 1 = on
+    float handbrake_state;      // W|L|A 0x0358 (W|L|A 0x04) 0 = off, 1 = on (instant)
+    char pad_WLA_0x035C[ 24 ];  // W|L|A 0x035C (W|L|A 0x18)
+    float engine_brake_stick;   // W|L|A 0x0374 (W|L|A 0x04) 0 = off, 1 = full; steps dependant on engine data
+    float engine_brake_state;   // W|L|A 0x0378 (W|L|A 0x04) 0 = off, 1 = full (instant); steps dependant on engine data
+    char pad_WLA_0x037C[ 20 ];  // W|L|A 0x037C (W|L|A 0x14)
+    float wipers_stick;         // W|L|A 0x0390 (W|L|A 0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast
+    float wipers_state; // W|L|A 0x0394 (W|L|A 0x04) 0 = off, 0.333 = intermittent, 0.666 = slow, 1 = fast (instant)
+    char pad_WLA_0x0398[ 20 ];            // W|L|A 0x0398 (W|L|A 0x14)
+    uint8_t left_window_moving_direction; // W|L|A 0x03AC (W|L|A 0x01) 1 = got to end down; 2 = got to end up; 16 = down; 32 = up
+    uint8_t is_left_window_moving; // W|L|A 0x03AD (W|L|A 0x01) 1 = down auto; 16 = down holding btn; 2 = auto up; 32 = up holding button
+    char pad_WLA_0x03AE[ 2 ];      // W|L|A 0x03AE (W|L|A 0x02)
+    float left_window_state;       // W|L|A 0x03B0 (W|L|A 0x04) 0 = up; 1 = down
+    float left_window_btn;         // W|L|A 0x03B4 (W|L|A 0x04) 0 = up; 0.5 off; 1 = down
+    float left_window_btn_state;   // W|L|A 0x03B8 (W|L|A 0x04) 0 = up; 0.5 off; 1 = down (instant)
+    char pad_WLA_0x03BC[ 8 ];      // W|L|A 0x03BC (W|L|A 0x08)
+    uint8_t right_window_moving_direction; // W|L|A 0x03C4 (W|L|A 0x01) 1 = got to end down; 2 = got to end up; 16 = down; 32 = up
+    uint8_t is_right_window_moving; // W|L|A 0x03C5 (W|L|A 0x01) 1 = down auto; 16 = down holding btn; 2 = auto up; 32 = up holding button
+    char pad_WLA_0x03C6[ 2 ];       // W|L|A 0x03C6 (W|L|A 0x02)
+    float right_window_state;       // W|L|A 0x03C8 (W|L|A 0x04) 0 = up; 1 = down
+    float right_window_btn;         // W|L|A 0x03CC (W|L|A 0x04) 0 = up; 0.5 off; 1 = down
+    float right_window_btn_state;   // W|L|A 0x03D0 (W|L|A 0x04) 0 = up; 0.5 off; 1 = down (instant)
+    char pad_WLA_0x03D4[ 6300 ];    // W|L|A 0x03D4 (W|L|A 0x189c)
+    class sound_player_truck_t* sound_player_truck;                   // W|L|A 0x1C70 (W|L|A 0x08)
+    char pad_WLA_0x1C78[ 52 ];                                        // W|L|A 0x1C78 (W|L|A 0x34)
+    float rpm2;                                                       // W|L|A 0x1CAC (W|L|A 0x04)
+    float some_throttle;                                              // W|L|A 0x1CB0 (W|L|A 0x04)
+    char pad_WLA_0x1CB4[ 12 ];                                        // W|L|A 0x1CB4 (W|L|A 0x0c)
+    float throttle_input;                                             // W|L|A 0x1CC0 (W|L|A 0x04) truck.input.throttle
+    float brake_input;                                                // W|L|A 0x1CC4 (W|L|A 0x04) truck.input.brake
+    float clutch_input;                                               // W|L|A 0x1CC8 (W|L|A 0x04) truck.input.clutch
+    char pad_WLA_0x1CCC[ 4 ];                                         // W|L|A 0x1CCC (W|L|A 0x04)
+    float steering_input;                                             // W|L|A 0x1CD0 (W|L|A 0x04)
+    char pad_WLA_0x1CD4[ 48 ];                                        // W|L|A 0x1CD4 (W|L|A 0x30)
+    placement_t placement;                                            // W|L|A 0x1D04 (W|L|A 0x20)
+    char pad_WLA_0x1D24[ 12 ];                                        // W|L|A 0x1D24 (W|L|A 0x0c)
+    class model_object_u* driver_model;                               // W|L|A 0x1D30 (W|L|A 0x08)
+    char pad_WLA_0x1D38[ 40 ];                                        // W|L|A 0x1D38 (W|L|A 0x28)
+    class physics_gearbox_sequential_u* physics_gearbox_sequential_u; // W|L|A 0x1D60 (W|L|A 0x08)
+    class physics_gearbox_automatic_u* physics_gearbox_automatic_u;   // W|L|A 0x1D68 (W|L|A 0x08)
+    class physics_gearbox_direct_u* physics_gearbox_direct_u;         // W|L|A 0x1D70 (W|L|A 0x08)
+    char pad_WLA_0x1D78[ 8 ];                                         // W|L|A 0x1D78 (W|L|A 0x08)
+    class accessory_head_lights_data_u* accessory_head_lights_data_u; // W|L|A 0x1D80 (W|L|A 0x08)
+    class head_lights_render_state_t* head_lights_render_state;       // W|L|A 0x1D88 (W|L|A 0x08)
+    char pad_WLA_0x1D90[ 24 ];                                        // W|L|A 0x1D90 (W|L|A 0x18)
+    array_local_t< char[ 24 ] /* actor_damage_cache_t */, 3 > N000098B2; // W|L|A 0x1DA8 (W|L|A 0x68)
+    char pad_WLA_0x1E10[ 8 ];                                         // W|L|A 0x1E10 (W|L|A 0x08)
+    array_local_t< vec3s_t, 3 > N000098C0;                            // W|L|A 0x1E18 (W|L|A 0x44)
+    char pad_WLA_0x1E5C[ 36 ];                                        // W|L|A 0x1E5C (W|L|A 0x24)
+    array_local_t< char[ 24 ] /* pct_vertex_t */, 4852 > N000098CD;   // W|L|A 0x1E80 (W|L|A 0x1c700)
+    char pad_WLA_0x1E580[ 1600 ];                                     // W|L|A 0x1E580 (W|L|A 0x640)
+
 
 public:
     float get_light_switch_state() const
@@ -222,7 +229,8 @@ public:
         return engine_brake_state;
     }
 };
-static_assert( sizeof( game_actor_u ) == 0x23D8 );
+
+static_assert( sizeof( game_actor_u ) == 0x1EBC0 ); // W|L|A
 
 // Size: 0x0010
 class sound_event_t
@@ -277,7 +285,7 @@ namespace sound
     static_assert( sizeof( sound_stream_t ) == 0x10 );
 }
 
-// Size: 0x1F70 1.58
+// Size: 0x1FC8 1.60
 class sound_library_t
 {
 public:
@@ -362,6 +370,6 @@ public:
         return now_playing_navigation_sound;
     }
 };
-static_assert( sizeof( sound_library_t ) == 0x1F70 );
+static_assert( sizeof( sound_library_t ) == 0x1FC8 );
 
 #pragma pack( pop )
