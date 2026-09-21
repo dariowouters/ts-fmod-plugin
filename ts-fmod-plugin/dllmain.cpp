@@ -361,14 +361,14 @@ SCSAPI_RESULT scs_telemetry_init(const scs_u32_t version, const scs_telemetry_in
         "] Searching for memory offsets... If this is one of the last messages in the log after a crash, try disabling this plugin.";
     scs_log(SCS_LOG_TYPE_message, ss.str().c_str());
 
-    const auto base_ctrl_ptr_offset = pattern::scan("48 8b 15 ? ? ? ? 48 8b ? 48 8b 41 ? 48 8b 92", game_base, image_size);
+    const auto base_ctrl_ptr_offset = pattern::scan("48 8b ? ? ? ? ? 48 8b ? 48 8b ? 48 8b 80", game_base, image_size);
     if (base_ctrl_ptr_offset == NULL)
     {
         version_params->common.log(SCS_LOG_TYPE_error, "[ts-fmod-plugin] Unable to find base_ctrl pointer offset");
         return SCS_RESULT_generic_error;
     }
-    base_ctrl_ptr = base_ctrl_ptr_offset + *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 3) + 7;
-    game_actor_offset = *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 17);
+    base_ctrl_ptr = base_ctrl_ptr_offset + *reinterpret_cast<int32_t*>(base_ctrl_ptr_offset + 3) + 7;
+    game_actor_offset = *reinterpret_cast<uint32_t*>(base_ctrl_ptr_offset + 16);
 
     const auto sound_system_ptr_offset = pattern::scan("44 38 3b 0f 84 ? ? ? ? 8b 05 ? ? ? ? 48 8b 3d ? ? ? ? 85 c0 74", game_base, image_size);
     if (sound_system_ptr_offset == NULL)
